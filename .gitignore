@@ -4,3 +4,4 @@
 
 /.vs
 /application-venv
+/__pycache__
