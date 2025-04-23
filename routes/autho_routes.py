@@ -1,3 +1,6 @@
+"""
+Authentication routes for Tennis Analytics Platform
+"""
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -8,6 +11,44 @@ from routes.utils import get_template_date
 
 # Create blueprint
 auth_bp = Blueprint('auth', __name__)
+
+@auth_bp.route('/register', methods=['GET', 'POST'])
+def register():
+    """User registration route"""
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+        
+    form = RegistrationForm()
+    
+    if form.validate_on_submit():
+        # Check if username or email already exists
+        existing_user = User.query.filter(
+            (User.username == form.username.data) | 
+            (User.email == form.email.data)
+        ).first()
+        
+        if existing_user:
+            if existing_user.username == form.username.data:
+                flash('Username already taken. Please choose another.', 'danger')
+            else:
+                flash('Email already registered. Please use another or login.', 'danger')
+            return render_template('register.html', form=form, **get_template_date())
+        
+        # Create new user
+        user = User(
+            username=form.username.data,
+            email=form.email.data
+        )
+        user.set_password(form.password.data)
+        
+        # Add to database
+        db.session.add(user)
+        db.session.commit()
+        
+        flash('Registration successful! You can now login.', 'success')
+        return redirect(url_for('auth.login'))
+    
+    return render_template('register.html', form=form, **get_template_date())
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():

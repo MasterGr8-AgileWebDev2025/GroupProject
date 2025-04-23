@@ -30,16 +30,19 @@ db.init_app(app)
 # Initialize login manager
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'auth.login'
 
-# Import models and routes after db initialization to avoid circular imports
-# with app.app_context():
-#     from models import User, Match, MatchStatistic, SharedAnalysis
-#     import routes
+# Import models after db initialization to avoid circular imports
+with app.app_context():
+    from models import User, Match, MatchStatistic, SharedAnalysis
     
-#     db.create_all()
+    db.create_all()
     
-#     # Setup user loader
-#     @login_manager.user_loader
-#     def load_user(user_id):
-#         return User.query.get(int(user_id))
+    # Setup user loader
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+    
+    # Import and register blueprint routes
+    from routes import register_blueprints
+    register_blueprints(app)
