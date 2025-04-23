@@ -29,3 +29,10 @@ def login():
             flash('Invalid email or password. Please try again.', 'danger')
     
     return render_template('login.html', form=form, **get_template_date())
+
+@auth_bp.route('/logout')
+def logout():
+    """User logout route"""
+    logout_user()
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('main.index'))
