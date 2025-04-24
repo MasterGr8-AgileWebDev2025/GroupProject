@@ -1,0 +1,442 @@
+{% extends "layout.html" %}
+
+{% block title %}About TennisAI - Tennis Match Analytics{% endblock %}
+
+{% block content %}
+<div class="container mb-5">
+    <!-- Hero Section -->
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6">
+            <h1 class="display-4 mb-3">About TennisAI</h1>
+            <p class="lead">Elevating tennis performance through AI-powered analysis and personalized improvement recommendations.</p>
+            <p class="mb-4">TennisAI combines cutting-edge artificial intelligence with sports science to provide tennis players of all levels with professional-grade match analysis and technique improvement guidance.</p>
+            <div class="d-flex gap-3">
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('upload_match') }}" class="btn btn-primary">Try Analysis Now</a>
+                {% else %}
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Get Started</a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-secondary">Login</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-lg-6 mt-4 mt-lg-0">
+            <div class="rounded overflow-hidden shadow">
+                <svg width="100%" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Tennis court -->
+                    <rect x="0" y="0" width="600" height="400" fill="#D2B48C" />
+                    <rect x="50" y="50" width="500" height="300" fill="#17B169" opacity="0.8" />
+                    <rect x="50" y="200" width="500" height="1" fill="white" stroke-width="2" />
+                    <rect x="300" y="50" width="1" height="300" fill="white" stroke-width="2" />
+                    
+                    <!-- Center marks and service boxes -->
+                    <rect x="175" y="50" width="1" height="150" fill="white" />
+                    <rect x="425" y="50" width="1" height="150" fill="white" />
+                    <rect x="300" y="50" width="1" height="150" fill="white" />
+                    <rect x="50" y="125" width="250" height="1" fill="white" />
+                    <rect x="300" y="125" width="250" height="1" fill="white" />
+                    
+                    <!-- AI analysis visualization -->
+                    <circle cx="150" cy="100" r="6" fill="#E53E3E" />
+                    <circle cx="220" cy="180" r="6" fill="#E53E3E" />
+                    <circle cx="380" cy="150" r="6" fill="#E53E3E" />
+                    <circle cx="450" cy="80" r="6" fill="#E53E3E" />
+                    
+                    <!-- Connection lines -->
+                    <path d="M150,100 L220,180 L380,150 L450,80" stroke="#E53E3E" stroke-width="2" fill="none" stroke-dasharray="5,5" />
+                    
+                    <!-- Player position -->
+                    <circle cx="300" cy="300" r="15" fill="#2C5282" />
+                    
+                    <!-- Data points around player -->
+                    <circle cx="300" cy="300" r="80" stroke="#2C5282" stroke-width="1" fill="none" stroke-dasharray="5,5" />
+                    <circle cx="300" cy="300" r="40" stroke="#2C5282" stroke-width="1" fill="none" />
+                    
+                    <!-- Analysis labels -->
+                    <text x="140" y="90" fill="white" font-size="12">Shot 1</text>
+                    <text x="230" y="190" fill="white" font-size="12">Shot 2</text>
+                    <text x="390" y="140" fill="white" font-size="12">Shot 3</text>
+                    <text x="460" y="70" fill="white" font-size="12">Shot 4</text>
+                </svg>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Our Mission -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 bg-light shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <h2 class="text-center mb-4">Our Mission</h2>
+                    <p class="lead text-center mb-4">To democratize professional tennis analysis and make it accessible to players of all levels.</p>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+                                        <i class="fas fa-bullseye text-primary fa-2x"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h5>Precision Analysis</h5>
+                                    <p class="text-muted">Provide detailed, accurate assessment of tennis technique using advanced AI algorithms.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+                                        <i class="fas fa-chart-line text-primary fa-2x"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h5>Continuous Improvement</h5>
+                                    <p class="text-muted">Enable players to track progress and make measurable improvements over time.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+                                        <i class="fas fa-users text-primary fa-2x"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h5>Community Learning</h5>
+                                    <p class="text-muted">Facilitate knowledge sharing between players, coaches, and tennis enthusiasts.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- How It Works -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2>How TennisAI Works</h2>
+            <p class="lead">Advanced technology made simple</p>
+        </div>
+        
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="mb-4 border-bottom pb-3">The Technology Behind TennisAI</h3>
+                    <div class="mb-4">
+                        <h5><i class="fas fa-brain text-primary me-2"></i>AI Computer Vision</h5>
+                        <p>Our proprietary computer vision algorithms analyze player movements from uploaded videos or photos, detecting 33 key body points to assess technique with incredible precision.</p>
+                    </div>
+                    <div class="mb-4">
+                        <h5><i class="fas fa-database text-primary me-2"></i>Professional Benchmarking</h5>
+                        <p>Your technique is compared against a database of professional players, allowing for detailed comparison against proven successful patterns.</p>
+                    </div>
+                    <div class="mb-4">
+                        <h5><i class="fas fa-cogs text-primary me-2"></i>Adaptive Learning</h5>
+                        <p>The more you use TennisAI, the better it understands your game. Our system adapts recommendations based on your progress and improvement areas.</p>
+                    </div>
+                    <div>
+                        <h5><i class="fas fa-chart-pie text-primary me-2"></i>Advanced Analytics</h5>
+                        <p>Comprehensive statistical analysis breaks down every aspect of your game, from serve placement percentages to forehand speed variations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="mb-4 border-bottom pb-3">The Analysis Process</h3>
+                    <div class="d-flex mb-4">
+                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white flex-shrink-0 me-3" style="width: 50px; height: 50px;">1</div>
+                        <div>
+                            <h5>Data Collection</h5>
+                            <p>Upload videos or photos of your tennis match. Our system supports various formats and can analyze both match play and practice sessions.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white flex-shrink-0 me-3" style="width: 50px; height: 50px;">2</div>
+                        <div>
+                            <h5>AI Processing</h5>
+                            <p>Our AI engine processes your uploads, identifying key technical elements like grip position, swing path, foot positioning, and body rotation.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white flex-shrink-0 me-3" style="width: 50px; height: 50px;">3</div>
+                        <div>
+                            <h5>Stroke Analysis</h5>
+                            <p>Each stroke is broken down into phases: preparation, backswing, contact, and follow-through. Each phase receives detailed scoring and feedback.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex">
+                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white flex-shrink-0 me-3" style="width: 50px; height: 50px;">4</div>
+                        <div>
+                            <h5>Personalized Recommendations</h5>
+                            <p>Based on your analysis, TennisAI generates tailored improvement tips and specific drills to address technical weaknesses.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Features -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2>Key Features</h2>
+            <p class="lead">Everything you need to elevate your tennis game</p>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-block mb-3">
+                        <i class="fas fa-video text-primary fa-2x"></i>
+                    </div>
+                    <h4>Video Analysis</h4>
+                    <p>Upload match or practice videos for detailed frame-by-frame technical analysis.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-block mb-3">
+                        <i class="fas fa-chart-bar text-primary fa-2x"></i>
+                    </div>
+                    <h4>Statistical Insights</h4>
+                    <p>Comprehensive statistics on every aspect of your game, from serve percentages to shot placement.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-block mb-3">
+                        <i class="fas fa-graduation-cap text-primary fa-2x"></i>
+                    </div>
+                    <h4>Technique Coaching</h4>
+                    <p>Detailed breakdown of your technique with specific drills and exercises for improvement.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-block mb-3">
+                        <i class="fas fa-share-alt text-primary fa-2x"></i>
+                    </div>
+                    <h4>Sharing Capabilities</h4>
+                    <p>Share analysis with coaches, hitting partners, or friends for collaborative improvement.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-block mb-3">
+                        <i class="fas fa-chart-line text-primary fa-2x"></i>
+                    </div>
+                    <h4>Progress Tracking</h4>
+                    <p>Monitor your improvement over time with detailed progress reports and trend analysis.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-block mb-3">
+                        <i class="fas fa-mobile-alt text-primary fa-2x"></i>
+                    </div>
+                    <h4>Mobile Friendly</h4>
+                    <p>Access your tennis analytics from any device with our responsive web platform.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Team Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2>Development Team</h2>
+            <p class="lead">CITS5505 Agile Web Development Student Group Project</p>
+            <div class="alert alert-info mb-4">
+                <i class="fas fa-info-circle me-2"></i>
+                This platform was developed as a group project for the CITS5505 Agile Web Development course at the University of Western Australia.
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; font-size: 32px;">
+                        BW
+                    </div>
+                    <h4>Brielle Wang</h4>
+                    <p class="text-muted mb-2">Developer (24386828)</p>
+                    <p class="small">Frontend design and user interface development with expertise in responsive web design.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; font-size: 32px;">
+                        DX
+                    </div>
+                    <h4>Daniel Xu</h4>
+                    <p class="text-muted mb-2">Developer (24525847)</p>
+                    <p class="small">Backend development and database integration specialist focusing on data processing.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; font-size: 32px;">
+                        JL
+                    </div>
+                    <h4>Jimmy Li</h4>
+                    <p class="text-muted mb-2">Developer (24404533)</p>
+                    <p class="small">Full-stack development with focus on feature implementation and system architecture.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; font-size: 32px;">
+                        MA
+                    </div>
+                    <h4>Md Jubel Ahmed</h4>
+                    <p class="text-muted mb-2">Developer (24647385)</p>
+                    <p class="small">Data visualization and analytics expert specializing in interactive charts and statistics.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 text-center mt-3">
+            <div class="card border-0 bg-light shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="mb-3">Course Project Details</h5>
+                    <p>This tennis analytics platform demonstrates the application of modern web development techniques, including:</p>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <ul class="list-unstyled text-start">
+                                <li><i class="fas fa-check-circle text-success me-2"></i>Flask web framework</li>
+                                <li><i class="fas fa-check-circle text-success me-2"></i>PostgreSQL database</li>
+                                <li><i class="fas fa-check-circle text-success me-2"></i>User authentication</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <ul class="list-unstyled text-start">
+                                <li><i class="fas fa-check-circle text-success me-2"></i>Data visualization</li>
+                                <li><i class="fas fa-check-circle text-success me-2"></i>Responsive design</li>
+                                <li><i class="fas fa-check-circle text-success me-2"></i>AJAX interactions</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <ul class="list-unstyled text-start">
+                                <li><i class="fas fa-check-circle text-success me-2"></i>RESTful API design</li>
+                                <li><i class="fas fa-check-circle text-success me-2"></i>Form validation</li>
+                                <li><i class="fas fa-check-circle text-success me-2"></i>Agile methodology</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FAQs -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="text-center mb-4">Frequently Asked Questions</h2>
+                    
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item border-0 mb-3">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    What type of tennis data can I upload?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    TennisAI accepts various data formats including videos, photos, and structured statistics. For videos, we recommend filming from the side or behind the baseline for optimal technique analysis. We support common video formats like MP4, MOV, and AVI.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border-0 mb-3">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    How accurate is the AI analysis?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Our AI has been trained on thousands of tennis matches and validated by professional coaches. It achieves over 95% accuracy in stroke classification and posture analysis when provided with clear video footage. The quality of your uploads directly affects analysis accuracy.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border-0 mb-3">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Can I share my analysis with my coach?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Yes! TennisAI is built for collaboration. You can share any analysis with your coach, hitting partners, or teammates directly through the platform. Simply enter their email or username and they'll receive access to your selected match analysis.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border-0 mb-3">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    How long does it take to process my match data?
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Processing time depends on the length and quality of your uploads. Typically, a full match analysis takes 5-10 minutes to process. For quick technique assessments using shorter clips, results are often available in under 2 minutes.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="headingFive">
+                                <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                    Is my data secure and private?
+                                </button>
+                            </h2>
+                            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Absolutely. We take data privacy seriously. Your uploads and analysis results are only visible to you and the people you explicitly choose to share them with. We use bank-level encryption for all data and never use your content for training our models without explicit consent.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
