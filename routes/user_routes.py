@@ -1,4 +1,6 @@
-
+"""
+User-related routes for Tennis Analytics Platform
+"""
 from datetime import datetime
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
@@ -11,6 +13,61 @@ from routes.utils import get_template_date
 
 # Create blueprint
 user_bp = Blueprint('user', __name__)
+
+@user_bp.route('/dashboard')
+@login_required
+def dashboard():
+    """User dashboard route"""
+    # Get user's match history
+    matches = Match.query.filter_by(user_id=current_user.id).order_by(Match.date.desc()).limit(5).all()
+    
+    # Get matches shared with the user
+    shared_matches_query = SharedAnalysis.query.filter_by(shared_with_id=current_user.id).join(
+        Match, Match.id == SharedAnalysis.match_id
+    ).order_by(Match.date.desc())
+    
+    shared_matches = []
+    for share in shared_matches_query.limit(5).all():
+        shared_matches.append({
+            'match': share.match,
+            'shared_by': User.query.get(share.shared_by_id)
+        })
+    
+    # Get user statistics
+    stats = get_user_statistics(current_user.id)
+    
+    return render_template(
+        'dashboard.html',
+        matches=matches,
+        shared_matches=shared_matches,
+        stats=stats,
+        **get_template_date()
+    )
+
+@user_bp.route('/history')
+@login_required
+def history():
+    """User match history route"""
+    matches = Match.query.filter_by(user_id=current_user.id).order_by(Match.date.desc()).all()
+    
+    # Get matches shared with the user
+    shared_matches_query = SharedAnalysis.query.filter_by(shared_with_id=current_user.id).join(
+        Match, Match.id == SharedAnalysis.match_id
+    ).order_by(Match.date.desc())
+    
+    shared_matches = []
+    for share in shared_matches_query.all():
+        shared_matches.append({
+            'match': share.match,
+            'shared_by': User.query.get(share.shared_by_id)
+        })
+    
+    return render_template(
+        'history.html',
+        matches=matches,
+        shared_matches=shared_matches,
+        **get_template_date()
+    )
 
 @user_bp.route('/profile', methods=['GET', 'POST'])
 @login_required
