@@ -5,3 +5,4 @@
 /.vs
 /application-venv
 /__pycache__
+/routes/__pycache__
