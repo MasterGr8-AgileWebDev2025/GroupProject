@@ -6,3 +6,4 @@
 /application-venv
 /__pycache__
 /routes/__pycache__
+/instance/tennis_analytics.db
