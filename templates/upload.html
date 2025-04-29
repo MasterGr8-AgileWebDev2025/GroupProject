@@ -1,0 +1,635 @@
+{% extends "layout.html" %}
+
+{% block title %}Upload Match - Tennis Match Analytics{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-upload me-2"></i>Upload Match Data</h4>
+            </div>
+            <div class="card-body p-4">
+                <!-- Nav tabs for different upload methods -->
+                <ul class="nav nav-tabs mb-4" id="uploadTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link {% if active_tab == 'manual' %}active{% endif %}" 
+                                id="manual-tab" 
+                                data-bs-toggle="tab" 
+                                data-bs-target="#manual-pane" 
+                                type="button" 
+                                role="tab" 
+                                aria-controls="manual-pane" 
+                                aria-selected="{{ 'true' if active_tab == 'manual' else 'false' }}">
+                            <i class="fas fa-pencil-alt me-1"></i>Manual Entry
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link {% if active_tab == 'excel' %}active{% endif %}" 
+                                id="excel-tab" 
+                                data-bs-toggle="tab" 
+                                data-bs-target="#excel-pane" 
+                                type="button" 
+                                role="tab" 
+                                aria-controls="excel-pane" 
+                                aria-selected="{{ 'true' if active_tab == 'excel' else 'false' }}">
+                            <i class="fas fa-file-excel me-1"></i>Excel Upload
+                        </button>
+                    </li>
+                </ul>
+                
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <!-- Manual Entry Form -->
+                    <div class="tab-pane fade {% if active_tab == 'manual' %}show active{% endif %}" id="manual-pane" role="tabpanel" aria-labelledby="manual-tab">
+                        <form id="manualUploadForm" method="POST" action="{{ url_for('upload_match') }}" enctype="multipart/form-data" class="needs-validation" novalidate>
+                            {{ manual_form.hidden_tag() }}
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="manual-title" class="form-label">Match Title<span class="text-danger">*</span></label>
+                                        {{ manual_form.title(class="form-control", id="manual-title", placeholder="e.g., Sunday Practice Match") }}
+                                        <div class="invalid-feedback">
+                                            Please provide a match title.
+                                        </div>
+                                        {% if manual_form.title.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {% for error in manual_form.title.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="manual-date" class="form-label">Match Date<span class="text-danger">*</span></label>
+                                        {{ manual_form.date(class="form-control date-picker", id="manual-date", type="date") }}
+                                        <div class="invalid-feedback">
+                                            Please select a match date.
+                                        </div>
+                                        {% if manual_form.date.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {% for error in manual_form.date.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="manual-opponent" class="form-label">Opponent</label>
+                                        {{ manual_form.opponent(class="form-control", id="manual-opponent", placeholder="Opponent's name") }}
+                                        {% if manual_form.opponent.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {% for error in manual_form.opponent.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="manual-location" class="form-label">Location</label>
+                                        {{ manual_form.location(class="form-control", id="manual-location", placeholder="e.g., City Tennis Club") }}
+                                        {% if manual_form.location.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {% for error in manual_form.location.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card mb-4 border-primary border-opacity-25">
+                                <div class="card-header bg-primary bg-opacity-10">
+                                    <h5 class="mb-0 text-primary">Match Score</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="manual-user_score" class="form-label">Your Score<span class="text-danger">*</span></label>
+                                                {{ manual_form.user_score(class="form-control", id="manual-user_score", placeholder="e.g., 6") }}
+                                                {% if manual_form.user_score.errors %}
+                                                    <div class="invalid-feedback d-block">
+                                                        {% for error in manual_form.user_score.errors %}
+                                                            {{ error }}
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="manual-opponent_score" class="form-label">Opponent Score<span class="text-danger">*</span></label>
+                                                {{ manual_form.opponent_score(class="form-control", id="manual-opponent_score", placeholder="e.g., 4") }}
+                                                {% if manual_form.opponent_score.errors %}
+                                                    <div class="invalid-feedback d-block">
+                                                        {% for error in manual_form.opponent_score.errors %}
+                                                            {{ error }}
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="manual-match_result" class="form-label">Result<span class="text-danger">*</span></label>
+                                                {{ manual_form.match_result(class="form-select", id="manual-match_result") }}
+                                                {% if manual_form.match_result.errors %}
+                                                    <div class="invalid-feedback d-block">
+                                                        {% for error in manual_form.match_result.errors %}
+                                                            {{ error }}
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="manual-description" class="form-label">Match Description</label>
+                                {{ manual_form.description(class="form-control", id="manual-description", rows="3", placeholder="Add notes about the match (optional)") }}
+                                {% if manual_form.description.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in manual_form.description.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="manual-files" class="form-label">Upload Match Files</label>
+                                <div class="input-group">
+                                    {{ manual_form.files(class="form-control", id="manual-files", multiple=True) }}
+                                    <label class="input-group-text" for="manual-files"><i class="fas fa-file-upload"></i></label>
+                                </div>
+                                <div class="form-text">
+                                    Upload videos, photos, or data files of your tennis match. Supported formats: MP4, MOV, JPG, PNG, CSV, JSON
+                                </div>
+                                {% if manual_form.files.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in manual_form.files.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div id="filePreview" class="mt-2"></div>
+                            </div>
+                            
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" id="manualSubmitButton" name="manual-submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-upload me-2"></i>Upload and Analyze
+                                </button>
+                            </div>
+                            
+                            <div id="manualLoadingSpinner" class="text-center mt-4 d-none">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Uploading and analyzing your match data. This may take a few moments...</p>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Excel Upload Form -->
+                    <div class="tab-pane fade {% if active_tab == 'excel' %}show active{% endif %}" id="excel-pane" role="tabpanel" aria-labelledby="excel-tab">
+                        <div class="alert alert-info mb-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Upload an Excel file containing your tennis match data. Our system will automatically extract and analyze the statistics.
+                        </div>
+                        
+                        <form id="excelUploadForm" method="POST" action="{{ url_for('upload_match') }}" enctype="multipart/form-data" class="needs-validation" novalidate>
+                            {{ excel_form.hidden_tag() }}
+                            
+                            <div class="mb-4">
+                                <label for="excel-title" class="form-label">Match Title<span class="text-danger">*</span></label>
+                                {{ excel_form.title(class="form-control", id="excel-title", placeholder="e.g., Sunday Practice Match") }}
+                                <div class="invalid-feedback">
+                                    Please provide a match title.
+                                </div>
+                                {% if excel_form.title.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in excel_form.title.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="excel-excel_file" class="form-label">Excel File<span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    {{ excel_form.excel_file(class="form-control", id="excel-excel_file") }}
+                                    <label class="input-group-text" for="excel-excel_file"><i class="fas fa-file-excel"></i></label>
+                                </div>
+                                <div class="form-text">
+                                    Upload an Excel file (.xlsx or .xls) containing your tennis match statistics
+                                </div>
+                                {% if excel_form.excel_file.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in excel_form.excel_file.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div id="excelFileInfo" class="mt-2"></div>
+                            </div>
+                            
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" id="excelSubmitButton" name="excel-submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-file-excel me-2"></i>Upload and Process Excel
+                                </button>
+                            </div>
+                            
+                            <div id="excelLoadingSpinner" class="text-center mt-4 d-none">
+                                <div class="spinner-border text-success" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Processing your Excel data. This may take a few moments...</p>
+                            </div>
+                        </form>
+                        
+                        <div class="card mt-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Excel File Requirements</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>To ensure proper data extraction, your Excel file should include the following information:</p>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        <strong>Basic Statistics:</strong> Aces, Double Faults, First Serve %, Points Won
+                                    </li>
+                                    <li class="list-group-item">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        <strong>Shot Analysis:</strong> Forehand Winners, Backhand Winners, Errors, Shot Placement
+                                    </li>
+                                    <li class="list-group-item">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        <strong>Movement Data:</strong> Distance Covered, Direction Changes, Sprints
+                                    </li>
+                                </ul>
+                                <div class="mt-3">
+                                    <a href="{{ url_for('download_excel_template') }}" class="btn btn-outline-primary btn-sm" target="_blank">
+                                        <i class="fas fa-download me-1"></i> Download Sample Template
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">How It Works</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                        <div class="rounded-circle bg-primary bg-opacity-10 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="fas fa-upload fa-2x text-primary"></i>
+                        </div>
+                        <h5 class="mt-3">1. Upload</h5>
+                        <p class="text-muted">Upload your tennis match data, including videos, photos, or Excel files</p>
+                    </div>
+                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                        <div class="rounded-circle bg-primary bg-opacity-10 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="fas fa-cogs fa-2x text-primary"></i>
+                        </div>
+                        <h5 class="mt-3">2. Process</h5>
+                        <p class="text-muted">Our AI analyzes your form and technique</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="rounded-circle bg-primary bg-opacity-10 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="fas fa-chart-bar fa-2x text-primary"></i>
+                        </div>
+                        <h5 class="mt-3">3. Analyze</h5>
+                        <p class="text-muted">Get detailed performance insights and improvement tips</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Tips for Best Results</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex mb-3">
+                            <div class="me-3">
+                                <i class="fas fa-video text-primary fa-2x"></i>
+                            </div>
+                            <div>
+                                <h6>Video Tips</h6>
+                                <p class="text-muted small">Record from the side or behind to capture your full swing. Ensure good lighting and a steady camera.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex mb-3">
+                            <div class="me-3">
+                                <i class="fas fa-camera text-primary fa-2x"></i>
+                            </div>
+                            <div>
+                                <h6>Photo Tips</h6>
+                                <p class="text-muted small">Take photos that clearly show your stance, grip, and stroke positions. Multiple angles are helpful.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex mb-3">
+                            <div class="me-3">
+                                <i class="fas fa-file-excel text-primary fa-2x"></i>
+                            </div>
+                            <div>
+                                <h6>Excel Files</h6>
+                                <p class="text-muted small">Follow the template format for Excel uploads. Include as much detail as possible for better analysis.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="fas fa-info-circle text-primary fa-2x"></i>
+                            </div>
+                            <div>
+                                <h6>Context Information</h6>
+                                <p class="text-muted small">Add match details and notes to help the AI understand the context of your performance.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Excel Template Modal -->
+<div class="modal fade" id="templateModal" tabindex="-1" aria-labelledby="templateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="templateModalLabel">Excel Template Information</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Use the template below as a guide for structuring your tennis match data in Excel.
+                </div>
+                
+                <h6 class="mt-4">Sample Excel Structure</h6>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th colspan="7" class="text-center bg-primary bg-opacity-10">Basic Statistics</th>
+                            </tr>
+                            <tr>
+                                <th>Aces</th>
+                                <th>Double Faults</th>
+                                <th>First Serve %</th>
+                                <th>First Serve Points Won</th>
+                                <th>Second Serve Points Won</th>
+                                <th>Break Points Converted</th>
+                                <th>Break Points Saved</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>8</td>
+                                <td>3</td>
+                                <td>68</td>
+                                <td>76</td>
+                                <td>53</td>
+                                <td>5</td>
+                                <td>2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="table-responsive mt-4">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th colspan="6" class="text-center bg-primary bg-opacity-10">Shot Analysis</th>
+                            </tr>
+                            <tr>
+                                <th>Shot Type</th>
+                                <th>Winners</th>
+                                <th>Errors</th>
+                                <th>Cross Court</th>
+                                <th>Down the Line</th>
+                                <th>Inside Out</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Forehand</td>
+                                <td>12</td>
+                                <td>8</td>
+                                <td>25</td>
+                                <td>15</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>Backhand</td>
+                                <td>8</td>
+                                <td>10</td>
+                                <td>20</td>
+                                <td>12</td>
+                                <td>5</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="table-responsive mt-4">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th colspan="3" class="text-center bg-primary bg-opacity-10">Movement Data</th>
+                            </tr>
+                            <tr>
+                                <th>Distance (meters)</th>
+                                <th>Direction Changes</th>
+                                <th>Sprints</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1500</td>
+                                <td>230</td>
+                                <td>25</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{{ url_for('download_excel_template') }}" class="btn btn-primary" target="_blank">
+                    <i class="fas fa-download me-1"></i> Download Template
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Upload specific scripts -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Manual form auto-select result based on scores
+    const userScoreInput = document.getElementById('manual-user_score');
+    const opponentScoreInput = document.getElementById('manual-opponent_score');
+    const resultSelect = document.getElementById('manual-match_result');
+    
+    function updateResult() {
+        const userScore = parseInt(userScoreInput.value) || 0;
+        const opponentScore = parseInt(opponentScoreInput.value) || 0;
+        
+        if (userScore > opponentScore) {
+            resultSelect.value = 'win';
+        } else if (userScore < opponentScore) {
+            resultSelect.value = 'loss';
+        } else if (userScore === opponentScore && userScore !== 0) {
+            resultSelect.value = 'draw';
+        }
+    }
+    
+    if (userScoreInput && opponentScoreInput && resultSelect) {
+        userScoreInput.addEventListener('input', updateResult);
+        opponentScoreInput.addEventListener('input', updateResult);
+    }
+    
+    // Manual form file preview
+    const filesInput = document.getElementById('manual-files');
+    const filePreview = document.getElementById('filePreview');
+    
+    if (filesInput && filePreview) {
+        filesInput.addEventListener('change', function() {
+            filePreview.innerHTML = '';
+            
+            if (this.files.length > 0) {
+                const previewList = document.createElement('div');
+                previewList.classList.add('list-group', 'mt-2');
+                
+                for (const file of this.files) {
+                    const fileItem = document.createElement('div');
+                    fileItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+                    
+                    // Choose icon based on file type
+                    let icon = 'fa-file';
+                    if (file.type.includes('image')) {
+                        icon = 'fa-file-image';
+                    } else if (file.type.includes('video')) {
+                        icon = 'fa-file-video';
+                    } else if (file.type.includes('csv')) {
+                        icon = 'fa-file-csv';
+                    } else if (file.type.includes('json')) {
+                        icon = 'fa-file-code';
+                    } else if (file.type.includes('excel') || file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
+                        icon = 'fa-file-excel';
+                    }
+                    
+                    fileItem.innerHTML = `
+                        <div>
+                            <i class="fas ${icon} me-2 text-primary"></i>
+                            <span>${file.name}</span>
+                        </div>
+                        <span class="badge bg-secondary">${formatFileSize(file.size)}</span>
+                    `;
+                    
+                    previewList.appendChild(fileItem);
+                }
+                
+                filePreview.appendChild(previewList);
+            }
+        });
+    }
+    
+    // Excel file info preview
+    const excelFileInput = document.getElementById('excel-excel_file');
+    const excelFileInfo = document.getElementById('excelFileInfo');
+    
+    if (excelFileInput && excelFileInfo) {
+        excelFileInput.addEventListener('change', function() {
+            excelFileInfo.innerHTML = '';
+            
+            if (this.files.length > 0) {
+                const file = this.files[0];
+                const fileInfoCard = document.createElement('div');
+                fileInfoCard.classList.add('card', 'border-success');
+                
+                fileInfoCard.innerHTML = `
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-file-excel me-2 text-success"></i>
+                            ${file.name}
+                        </h6>
+                        <p class="card-text text-muted small mb-0">
+                            Size: ${formatFileSize(file.size)}
+                        </p>
+                    </div>
+                `;
+                
+                excelFileInfo.appendChild(fileInfoCard);
+            }
+        });
+    }
+    
+    // Show loading spinner on form submit
+    const manualForm = document.getElementById('manualUploadForm');
+    const manualSpinner = document.getElementById('manualLoadingSpinner');
+    const excelForm = document.getElementById('excelUploadForm');
+    const excelSpinner = document.getElementById('excelLoadingSpinner');
+    
+    if (manualForm && manualSpinner) {
+        manualForm.addEventListener('submit', function() {
+            if (this.checkValidity()) {
+                manualSpinner.classList.remove('d-none');
+            }
+        });
+    }
+    
+    if (excelForm && excelSpinner) {
+        excelForm.addEventListener('submit', function() {
+            if (this.checkValidity()) {
+                excelSpinner.classList.remove('d-none');
+            }
+        });
+    }
+    
+    // Helper function to format file size
+    function formatFileSize(bytes) {
+        if (bytes < 1024) {
+            return bytes + ' B';
+        } else if (bytes < 1024 * 1024) {
+            return (bytes / 1024).toFixed(1) + ' KB';
+        } else {
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+    }
+});
+</script>
+{% endblock %}

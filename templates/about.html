@@ -12,10 +12,10 @@
             <p class="mb-4">TennisAI combines cutting-edge artificial intelligence with sports science to provide tennis players of all levels with professional-grade match analysis and technique improvement guidance.</p>
             <div class="d-flex gap-3">
                 {% if current_user.is_authenticated %}
-                <a href="{{ url_for('upload_match') }}" class="btn btn-primary">Try Analysis Now</a>
+                <a href="{{ url_for('match.upload_match') }}" class="btn btn-primary">Try Analysis Now</a>
                 {% else %}
                 <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Get Started</a>
-                <a href="{{ url_for('login') }}" class="btn btn-outline-secondary">Login</a>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary">Login</a>
                 {% endif %}
             </div>
         </div>
