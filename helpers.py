@@ -113,8 +113,10 @@ def process_match_data(files, match_id):
             "areas": [
                 {
                     "title": random.choice([
+
                         "Serve Consistency",
                         "Forehand Technique",
+
                         "Backhand Technique",
                         "Volley Positioning",
                         "Return of Serve"
@@ -129,8 +131,10 @@ def process_match_data(files, match_id):
                 },
                 {
                     "title": random.choice([
+
                         "Movement Efficiency",
                         "Point Construction",
+
                         "Net Game",
                         "Shot Selection",
                         "Recovery Position"
@@ -185,7 +189,6 @@ def process_excel_data(file, match_id):
 
         # For MVP purpose, we'll use the file but still generate sample data
         # In production, this would parse the actual Excel data
-
         # Check if this is a recognized tennis stats template
         # Basic validation: check for expected column names or sheet structure
         has_basic_stats = False
@@ -298,8 +301,10 @@ def process_excel_data(file, match_id):
                 "areas": [
                     {
                         "title": random.choice([
+                          
                             "Serve Consistency",
                             "Forehand Technique",
+
                             "Backhand Technique",
                             "Volley Positioning",
                             "Return of Serve"
@@ -314,8 +319,10 @@ def process_excel_data(file, match_id):
                     },
                     {
                         "title": random.choice([
+
                             "Movement Efficiency",
                             "Point Construction",
+
                             "Net Game",
                             "Shot Selection",
                             "Recovery Position"
