@@ -11,18 +11,18 @@ def process_match_data(files, match_id):
     """
     Process uploaded match data files and extract statistics.
     For the MVP, we'll generate sample data since we won't be processing actual files.
-
+    
     Args:
         files: The uploaded files from the form
         match_id: The ID of the match
-
+        
     Returns:
         Dictionary of statistics extracted from the files
     """
     # In a real implementation, this would parse files (CSV, videos, etc.)
     # For MVP, we'll generate sample data
     logging.debug(f"Processing match data for match_id: {match_id}")
-
+    
     # Sample statistics data structure
     statistics = {
         "basic_stats": {
@@ -113,10 +113,8 @@ def process_match_data(files, match_id):
             "areas": [
                 {
                     "title": random.choice([
-
-                        "Serve Consistency",
-                        "Forehand Technique",
-
+                        "Serve Consistency", 
+                        "Forehand Technique", 
                         "Backhand Technique",
                         "Volley Positioning",
                         "Return of Serve"
@@ -131,10 +129,8 @@ def process_match_data(files, match_id):
                 },
                 {
                     "title": random.choice([
-
-                        "Movement Efficiency",
-                        "Point Construction",
-
+                        "Movement Efficiency", 
+                        "Point Construction", 
                         "Net Game",
                         "Shot Selection",
                         "Recovery Position"
@@ -157,60 +153,61 @@ def process_match_data(files, match_id):
             ])
         }
     }
-
+    
     return statistics
 
 def process_excel_data(file, match_id):
     """
     Process Excel file and extract tennis match statistics.
-
+    
     Args:
         file: The uploaded Excel file
         match_id: The ID of the match
-
+        
     Returns:
         Dictionary of statistics extracted from Excel
     """
     logging.debug(f"Processing Excel data for match_id: {match_id}")
-
+    
     # Save the file temporarily to read it with pandas
     filename = secure_filename(file.filename)
     temp_path = os.path.join('/tmp', filename)
     file.save(temp_path)
-
+    
     try:
         # Read the Excel file
         df = pd.read_excel(temp_path)
         logging.debug(f"Excel file loaded, shape: {df.shape}")
-
+        
         # Expected Excel format:
         # The Excel sheet should have different sections with statistics
         # Try to extract data from various sheets or sections
-
+        
         # For MVP purpose, we'll use the file but still generate sample data
         # In production, this would parse the actual Excel data
+        
         # Check if this is a recognized tennis stats template
         # Basic validation: check for expected column names or sheet structure
         has_basic_stats = False
         has_shot_analysis = False
         has_movement_data = False
-
+        
         # Look for common header names in tennis statistics
         if set(['Aces', 'Double Faults', 'First Serve %']).issubset(set(df.columns)):
             has_basic_stats = True
             logging.debug("Found basic statistics columns")
-
+        
         if set(['Forehand Winners', 'Backhand Winners', 'Forehand Errors']).issubset(set(df.columns)):
             has_shot_analysis = True
             logging.debug("Found shot analysis columns")
-
+            
         if set(['Distance', 'Sprints', 'Direction Changes']).issubset(set(df.columns)):
             has_movement_data = True
             logging.debug("Found movement data columns")
-
+        
         # In a real implementation, we would extract actual values from the Excel file
         # For this MVP, we'll generate sample data but acknowledge the Excel upload
-
+        
         # Same sample statistics structure as in process_match_data, with slight enhancements
         statistics = {
             "basic_stats": {
@@ -301,10 +298,8 @@ def process_excel_data(file, match_id):
                 "areas": [
                     {
                         "title": random.choice([
-                          
-                            "Serve Consistency",
-                            "Forehand Technique",
-
+                            "Serve Consistency", 
+                            "Forehand Technique", 
                             "Backhand Technique",
                             "Volley Positioning",
                             "Return of Serve"
@@ -319,10 +314,8 @@ def process_excel_data(file, match_id):
                     },
                     {
                         "title": random.choice([
-
-                            "Movement Efficiency",
-                            "Point Construction",
-
+                            "Movement Efficiency", 
+                            "Point Construction", 
                             "Net Game",
                             "Shot Selection",
                             "Recovery Position"
@@ -352,7 +345,7 @@ def process_excel_data(file, match_id):
                 "has_movement_data": has_movement_data
             }
         }
-
+        
     except Exception as e:
         logging.error(f"Error processing Excel file: {e}")
         # If there's an error, we still return sample data but note the error
@@ -362,21 +355,21 @@ def process_excel_data(file, match_id):
             "error": str(e),
             "filename": filename
         }
-
+    
     finally:
         # Clean up temporary file
         if os.path.exists(temp_path):
             os.remove(temp_path)
-
+    
     return statistics
 
 def get_user_statistics(user_id):
     """
     Calculate aggregated statistics for a user based on their match history.
-
+    
     Args:
         user_id: The ID of the user
-
+        
     Returns:
         Dictionary of aggregated statistics
     """
