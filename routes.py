@@ -1,4 +1,4 @@
-"""
+
 Legacy routes file for backward compatibility.
 This file is only here for transitional purposes.
 All routes have been moved to the routes/ package.
