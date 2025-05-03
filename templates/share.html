@@ -1,0 +1,148 @@
+{% extends "layout.html" %}
+
+{% block title %}Share Match Analysis - Tennis Match Analytics{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="mb-1">Share Match Analysis</h1>
+        <p class="text-muted">Share your match data and insights with teammates or coaches</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Share Match Analysis</h5>
+            </div>
+            <div class="card-body">
+                {% if match %}
+                    <div class="alert alert-info mb-4">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="fas fa-info-circle fa-2x"></i>
+                            </div>
+                            <div>
+                                <h5 class="alert-heading">Sharing: {{ match.title }}</h5>
+                                <p class="mb-0">Match date: {{ match.date.strftime('%b %d, %Y') }}</p>
+                                {% if match.location %}
+                                    <p class="mb-0">Location: {{ match.location }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <form method="POST" action="{{ url_for('share') }}">
+                    {{ form.hidden_tag() }}
+                    {{ form.match_id }}
+
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Share with:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            {{ form.username(class="form-control", placeholder="Enter username") }}
+                        </div>
+                        {% if form.username.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.username.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Enter the username of the person you want to share with</div>
+                    </div>
+
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Recently Shared</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_shares %}
+                    <div class="list-group list-group-flush">
+                        {% for shared in recent_shares %}
+                            <div class="list-group-item px-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">{{ shared.match.title }}</h6>
+                                        <p class="text-muted small mb-0">
+                                            Shared with {{ shared.shared_with.username }} on {{ shared.shared_at.strftime('%b %d, %Y') }}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <a href="{{ url_for('analysis', match_id=shared.match.id) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye me-1"></i>View
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <div class="mb-3">
+                            <i class="fas fa-share-alt fa-3x text-muted"></i>
+                        </div>
+                        <p class="text-muted">You haven't shared any match analyses yet</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Sharing Tips</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item px-0">
+                        <div class="d-flex">
+                            <div class="me-3 text-primary">
+                                <i class="fas fa-lightbulb fa-lg"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Choose Wisely</h6>
+                                <p class="text-muted small mb-0">Only share with users you trust and who need access to your match data.</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item px-0">
+                        <div class="d-flex">
+                            <div class="me-3 text-primary">
+                                <i class="fas fa-shield-alt fa-lg"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Privacy Control</h6>
+                                <p class="text-muted small mb-0">The user will only be able to view the match details and analysis, not edit them.</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item px-0">
+                        <div class="d-flex">
+                            <div class="me-3 text-primary">
+                                <i class="fas fa-user-plus fa-lg"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Collaborate</h6>
+                                <p class="text-muted small mb-0">Share with your coach to get expert feedback on your performance.</p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

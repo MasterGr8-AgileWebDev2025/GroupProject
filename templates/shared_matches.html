@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="fw-bold">Matches Shared With You</h1>
+</div>
+
+{% if not shared_matches %}
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-5 text-center">
+        <div class="mb-4">
+            <i class="fas fa-share-alt fa-4x text-muted mb-3"></i>
+            <h3 class="fw-bold">No Shared Matches</h3>
+            <p class="text-muted">No one has shared any match analysis with you yet.</p>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="row g-4">
+    {% for match in shared_matches %}
+    <div class="col-md-6 col-xl-4">
+        <div class="card h-100 border-0 shadow-sm hover-card">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between mb-3">
+                    <h5 class="fw-bold card-title mb-0">{{ match.title }}</h5>
+                    <span class="badge text-bg-primary">Shared</span>
+                </div>
+                <p class="card-text text-muted mb-3">
+                    <small>
+                        <i class="far fa-calendar-alt me-1"></i> {{ match.date_played.strftime('%b %d, %Y') }}
+                        {% if match.opponent %} • vs. {{ match.opponent }}{% endif %}
+                    </small>
+                </p>
+                
+                {% if match.analysis %}
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="text-muted small">Overall Score</span>
+                        <span class="badge text-bg-success">{{ "%.1f"|format(match.analysis.overall_score) }}/10</span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-success"
+                             role="progressbar"
+                             style="width: {{ (match.analysis.overall_score * 10) | round(1) }}%;"
+                             aria-valuenow="{{ match.analysis.overall_score }}"
+                             aria-valuemin="0"
+                             aria-valuemax="10">
+                        </div>
+                    </div>                    
+                </div>
+                
+                <div class="d-flex justify-content-between text-muted mb-3">
+                    <small>
+                        <i class="fas fa-bullseye me-1"></i> {{ match.analysis.aces or 0 }} aces
+                    </small>
+                    <small>
+                        <i class="fas fa-times-circle me-1"></i> {{ match.analysis.double_faults or 0 }} double faults
+                    </small>
+                </div>
+                {% else %}
+                <div class="alert alert-warning small mb-3">
+                    No analysis available for this match.
+                </div>
+                {% endif %}
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">Shared by: {{ match.owner.username }}</small>
+                    <a href="{{ url_for('view_match', match_id=match.id) }}" class="btn btn-sm btn-outline-primary">View Analysis</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
