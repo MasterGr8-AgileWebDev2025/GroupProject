@@ -3,9 +3,7 @@
 ################################################################################
 
 /.vs
-/application-venv
-/__pycache__
-/routes/__pycache__
+*application-venv
+*__pycache__
 /instance/tennis_analytics.db
-/.idea
-/.idea/GroupProject.iml
+*.idea
