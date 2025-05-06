@@ -7,3 +7,5 @@
 /__pycache__
 /routes/__pycache__
 /instance/tennis_analytics.db
+/.idea
+/.idea/GroupProject.iml
