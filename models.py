@@ -1,7 +1,7 @@
 from app import db
 from flask_login import UserMixin
 from datetime import datetime
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
 import json
 
 class User(UserMixin, db.Model):
@@ -24,9 +24,6 @@ class User(UserMixin, db.Model):
     
     def set_password(self, password): # TODO: Add unittest 
         self.password_hash = generate_password_hash(password)
-        
-    def check_password(self, password): # TODo: Add unittest
-        return check_password_hash(self.password_hash, password)
     
     def __repr__(self):
         return f'<User {self.username}>'
