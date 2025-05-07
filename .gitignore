@@ -4,8 +4,7 @@
 
 /.vs
 /application-venv
-/__pycache__
-/routes/__pycache__
+*__pycache__
 /instance/tennis_analytics.db
 .venv/
-
+/.idea
