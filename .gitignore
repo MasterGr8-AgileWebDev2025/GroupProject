@@ -5,6 +5,7 @@
 /.vs
 *application-venv
 *__pycache__
-/instance/tennis_analytics.db
-*.idea
 *.pytest_cache
+*tennis_analytics.db
+.venv/
+/.idea

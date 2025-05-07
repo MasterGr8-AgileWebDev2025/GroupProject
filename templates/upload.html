@@ -42,7 +42,7 @@
                 <div class="tab-content">
                     <!-- Manual Entry Form -->
                     <div class="tab-pane fade {% if active_tab == 'manual' %}show active{% endif %}" id="manual-pane" role="tabpanel" aria-labelledby="manual-tab">
-                        <form id="manualUploadForm" method="POST" action="{{ url_for('upload_match') }}" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        <form id="manualUploadForm" method="POST" action="{{ url_for('match.upload_match') }}" enctype="multipart/form-data" class="needs-validation" novalidate>
                             {{ manual_form.hidden_tag() }}
                             
                             <div class="row g-3">
