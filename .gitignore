@@ -7,3 +7,4 @@
 *__pycache__
 /instance/tennis_analytics.db
 *.idea
+*.pytest_cache

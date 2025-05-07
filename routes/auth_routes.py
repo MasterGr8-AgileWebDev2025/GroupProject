@@ -12,6 +12,7 @@ from routes.utils import get_template_date
 # Create blueprint
 auth_bp = Blueprint('auth', __name__)
 
+# TODO: should we add basic response check as unit test here?
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     """User registration route"""
