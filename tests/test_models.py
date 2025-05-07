@@ -1,5 +1,5 @@
 import pytest
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash #, generate_password_hash
 from models import User
 
 def test_set_password():
