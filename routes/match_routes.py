@@ -108,12 +108,12 @@ def upload_match():
             flash(f'Error processing Excel data: {str(e)}', 'danger')
             db.session.delete(match)
             db.session.commit()
-            return render_template('upload.html', form=form, excel_form=excel_form, **get_template_date())
+            return render_template('upload.html', manual_form=form, excel_form=excel_form, **get_template_date())
         
         flash('Match uploaded and processed successfully!', 'success')
         return redirect(url_for('match.analysis', match_id=match.id))
     
-    return render_template('upload.html', form=form, excel_form=excel_form, **get_template_date())
+    return render_template('upload.html', manual_form=form, excel_form=excel_form, **get_template_date())
 
 @match_bp.route('/analysis/<int:match_id>')
 @login_required
@@ -140,4 +140,69 @@ def analysis(match_id):
         overall_score=overall_score,
         match_analysis=match_analysis,
         **get_template_date()
+    )
+
+
+@match_bp.route('/match/<int:match_id>')
+@login_required
+def match_details(match_id):
+    """Match details route"""
+    # Check if user has access to this match
+    match = check_match_access(match_id)
+    
+    # Get all statistics
+    statistics = {}
+    for stat in match.statistics.all():
+        statistics[stat.statistic_type] = stat.get_data()
+    
+    return render_template(
+        'match_details.html',
+        match=match,
+        statistics=statistics,
+        **get_template_date()
+    )
+
+@match_bp.route('/match/<int:match_id>/report')
+@login_required
+def download_report(match_id):
+    """Download full match report route"""
+    # Check if user has access to this match
+    match = check_match_access(match_id)
+    
+    # Get all statistics
+    statistics = {}
+    for stat in match.statistics.all():
+        statistics[stat.statistic_type] = stat.get_data()
+    
+    # Calculate overall performance score
+    overall_score = calculate_overall_score(statistics)
+    
+    # Generate match analysis
+    match_analysis = generate_match_analysis(statistics)
+    
+    # Create HTML report
+    html = render_template(
+        'match_report.html',
+        match=match,
+        statistics=statistics,
+        overall_score=overall_score,
+        match_analysis=match_analysis,
+        export_mode=True,
+        **get_template_date()
+    )
+    
+    # Create a temporary file to store the HTML report
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as temp:
+        temp.write(html.encode('utf-8'))
+        temp_name = temp.name
+    
+    # Generate filename
+    date_str = match.date.strftime('%Y-%m-%d')
+    filename = f"{date_str}_tennis_match_report_{match.id}.html"
+    
+    return send_file(
+        temp_name,
+        mimetype='text/html',
+        download_name=filename,
+        as_attachment=True
     )
