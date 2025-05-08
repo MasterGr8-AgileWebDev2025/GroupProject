@@ -1,11 +1,1353 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>{{ match.title }} - Full Analysis Report | Tennis Match Analytics</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ match.title }} - Full Analysis Report | Tennis Match Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            line-height: 1.6;
+            letter-spacing: 0.015em;
+            font-family: 'Inter', sans-serif;
+            color: #333;
+            padding: 0;
+            margin: 0;
+        }
+        .page-header {
+            background-color: #17B169;
+            color: white;
+            padding: 2.5rem 1.5rem;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        .section-title {
+            border-bottom: 3px solid #17B169;
+            font-weight: bold;
+            font-size: 1.75rem;
+            letter-spacing: 0.02em;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            color: #2C5282;
+        }
+        .score-card {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #17B169;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+        }
+        .stat-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background-color: white;
+        }
+        .progress-bar-container {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        .progress-bar {
+            height: 100%;
+            border-radius: 4px;
+            background-color: #17B169;
+        }
+        .match-result-win {
+            color: #17B169;
+        }
+        .match-result-loss {
+            color: #e53e3e;
+        }
+        .match-result-draw {
+            color: #718096;
+        }
+        .chart-container {
+            width: 100%;
+            height: 350px;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        .tennis-court {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background-color: #B5D6A7;
+            border: 2px solid white;
+            margin: 20px 0;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+
+            background-color: #B5D6A7;
+
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background-color: #17B169;
+            border: 2px solid white;
+            margin: 20px 0;
+        }
+        .court-line {
+            background-color: white;
+            position: absolute;
+        }
+        .court-net {
+            width: 2px;
+            height: 100%;
+            left: 50%;
+            top: 0;
+        }
+        .court-center {
+            width: 100%;
+            height: 2px;
+            left: 0;
+            top: 50%;
+        }
+        .court-service-line {
+            width: 100%;
+            height: 2px;
+            left: 0;
+            top: 30%;
+        }
+        .court-service-line.bottom {
+            top: 70%;
+        }
+        .shot-point {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: red;
+            transform: translate(-50%, -50%);
+        }
+        .shot-forehand {
+            background-color: #4299e1;
+        }
+        .shot-backhand {
+            background-color: #f56565;
+        }
+        .shot-serve {
+            background-color: #ecc94b;
+        }
+        .old-chart-container {
+            width: 100%;
+            height: 350px;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        .print-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .tennis-court {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background-color: #B5D6A7;
+            border: 2px solid white;
+            margin: 20px 0;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+
+            background-color: #B5D6A7;
+
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background-color: #17B169;
+            border: 2px solid white;
+            margin: 20px 0;
+        }
+        .court-line {
+            background-color: white;
+            position: absolute;
+        }
+        .court-net {
+            width: 2px;
+            height: 100%;
+            left: 50%;
+            top: 0;
+        }
+        .court-center {
+            width: 100%;
+            height: 2px;
+            left: 0;
+            top: 50%;
+        }
+        .court-service-line {
+            width: 100%;
+            height: 2px;
+            left: 0;
+            top: 30%;
+        }
+        .court-service-line.bottom {
+            top: 70%;
+        }
+        .shot-point {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: red;
+            transform: translate(-50%, -50%);
+        }
+        .shot-forehand {
+            background-color: #4299e1;
+        }
+        .shot-backhand {
+            background-color: #f56565;
+        }
+        .shot-serve {
+            background-color: #ecc94b;
+        }
+        @media print {
+            .chart-container {
+                break-inside: avoid;
+            }
+            .no-print {
+                display: none;
+            }
+            body {
+                background-color: white;
+            }
+            .stat-card {
+                box-shadow: none;
+                border: 1px solid #dee2e6;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .chart-container {
+            width: 100%;
+            height: 350px;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        .tennis-court {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background-color: #B5D6A7;
+            border: 2px solid white;
+            margin: 20px 0;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+
+            background-color: #B5D6A7;
+
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background-color: #17B169;
+            border: 2px solid white;
+            margin: 20px 0;
+        }
+        .court-line {
+            background-color: white;
+            position: absolute;
+        }
+        .court-net {
+            width: 2px;
+            height: 100%;
+            left: 50%;
+            top: 0;
+        }
+        .court-center {
+            width: 100%;
+            height: 2px;
+            left: 0;
+            top: 50%;
+        }
+        .court-service-line {
+            width: 100%;
+            height: 2px;
+            left: 0;
+            top: 30%;
+        }
+        .court-service-line.bottom {
+            top: 70%;
+        }
+        .shot-point {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: red;
+            transform: translate(-50%, -50%);
+        }
+        .shot-forehand {
+            background-color: #4299e1;
+        }
+        .shot-backhand {
+            background-color: #f56565;
+        }
+        .shot-serve {
+            background-color: #ecc94b;
+        }
+        .old-chart-container {
+                break-inside: avoid;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Print Button -->
+    <button onclick="window.print()" class="btn btn-primary print-button no-print">
+        <i class="fas fa-print me-2"></i>Print Report
+    </button>
 
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1>Tennis Match Analysis Report</h1>
+                    <h2>{{ match.title }}</h2>
+                    <p>
+                        <i class="fas fa-calendar-alt me-1"></i> {{ match.date.strftime('%B %d, %Y') }}
+                        {% if match.opponent %}
+                        <span class="mx-2">|</span>
+                        <i class="fas fa-user me-1"></i> vs {{ match.opponent }}
+                        {% endif %}
+                        {% if match.location %}
+                        <span class="mx-2">|</span>
+                        <i class="fas fa-map-marker-alt me-1"></i> {{ match.location }}
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="d-inline-block text-center">
+                        <p class="mb-1">Match Result</p>
+                        {% if match.match_result == 'win' %}
+                        <h3 class="match-result-win">WIN</h3>
+                        {% elif match.match_result == 'loss' %}
+                        <h3 class="match-result-loss">LOSS</h3>
+                        {% elif match.match_result == 'draw' %}
+                        <h3 class="match-result-draw">DRAW</h3>
+                        {% else %}
+                        <h3>N/A</h3>
+                        {% endif %}
+                        
+                        {% if match.user_score and match.opponent_score %}
+                        <p class="fw-bold fs-5">{{ match.user_score }} - {{ match.opponent_score }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Overview Section -->
+        <section class="mb-5">
+            <h2 class="section-title">Match Overview</h2>
+            <div class="row">
+                <div class="col-md-4 text-center mb-4">
+                    <div class="stat-card">
+                        <h5>Overall Performance Score</h5>
+                        <div class="score-card">
+                            {{ overall_score }}
+                        </div>
+                        <p class="text-muted">Out of 10</p>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="stat-card">
+                        <h5>Basic Statistics</h5>
+                        <div class="row">
+                            <div class="col-6 col-md-3 mb-3">
+                                <p class="text-muted mb-0">Aces</p>
+                                <h4>{{ statistics.basic_stats.aces }}</h4>
+                            </div>
+                            <div class="col-6 col-md-3 mb-3">
+                                <p class="text-muted mb-0">Double Faults</p>
+                                <h4>{{ statistics.basic_stats.double_faults }}</h4>
+                            </div>
+                            <div class="col-6 col-md-3 mb-3">
+                                <p class="text-muted mb-0">1st Serve %</p>
+                                <h4>{{ statistics.basic_stats.first_serve_percentage }}%</h4>
+                            </div>
+                            <div class="col-6 col-md-3 mb-3">
+                                <p class="text-muted mb-0">Points Won</p>
+                                <h4>{{ statistics.basic_stats.total_points_won }}%</h4>
+                            </div>
+                            <div class="col-6 col-md-3 mb-3">
+                                <p class="text-muted mb-0">1st Serve Points</p>
+                                <h4>{{ statistics.basic_stats.first_serve_points_won }}%</h4>
+                            </div>
+                            <div class="col-6 col-md-3 mb-3">
+                                <p class="text-muted mb-0">2nd Serve Points</p>
+                                <h4>{{ statistics.basic_stats.second_serve_points_won }}%</h4>
+                            </div>
+                            <div class="col-6 col-md-3 mb-3">
+                                <p class="text-muted mb-0">Break Points Conv.</p>
+                                <h4>{{ statistics.basic_stats.break_points_converted }}</h4>
+                            </div>
+                            <div class="col-6 col-md-3 mb-3">
+                                <p class="text-muted mb-0">Break Points Saved</p>
+                                <h4>{{ statistics.basic_stats.break_points_saved }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Match Description -->
+            {% if match.description %}
+            <div class="stat-card">
+                <h5>Match Description</h5>
+                <p>{{ match.description }}</p>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Shot Analysis Section -->
+        <section class="mb-5">
+            <h2 class="section-title">Shot Analysis</h2>
+            
+            <!-- Forehand Analysis -->
+            <div class="stat-card mb-4">
+                <h5><i class="fas fa-tennis-ball me-2"></i>Forehand Analysis</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <h6 class="mb-3">Forehand Speed (km/h)</h6>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Average: {{ statistics.shot_analysis.forehand.speed.avg }}</span>
+                            <span>Max: {{ statistics.shot_analysis.forehand.speed.max }}</span>
+                            <span>Min: {{ statistics.shot_analysis.forehand.speed.min }}</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: {{ statistics.shot_analysis.forehand.speed.avg / 2 }}%"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <h6 class="mb-3">Forehand Effectiveness</h6>
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="text-muted mb-1">Winners</p>
+                                <h4 class="text-success">{{ statistics.shot_analysis.forehand.winners }}</h4>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted mb-1">Errors</p>
+                                <h4 class="text-danger">{{ statistics.shot_analysis.forehand.errors }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6 class="mb-3">Forehand Placement Distribution</h6>
+                        <div class="row">
+                            <div class="col-4 text-center">
+                                <div class="stat-card bg-light py-2">
+                                    <p class="mb-1">Cross Court</p>
+                                    <h5>{{ statistics.shot_analysis.forehand.placement.cross_court }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div class="stat-card bg-light py-2">
+                                    <p class="mb-1">Down the Line</p>
+                                    <h5>{{ statistics.shot_analysis.forehand.placement.down_the_line }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div class="stat-card bg-light py-2">
+                                    <p class="mb-1">Inside Out</p>
+                                    <h5>{{ statistics.shot_analysis.forehand.placement.inside_out }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Backhand Analysis -->
+            <div class="stat-card mb-4">
+                <h5><i class="fas fa-tennis-ball me-2"></i>Backhand Analysis</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <h6 class="mb-3">Backhand Speed (km/h)</h6>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Average: {{ statistics.shot_analysis.backhand.speed.avg }}</span>
+                            <span>Max: {{ statistics.shot_analysis.backhand.speed.max }}</span>
+                            <span>Min: {{ statistics.shot_analysis.backhand.speed.min }}</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: {{ statistics.shot_analysis.backhand.speed.avg / 2 }}%"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <h6 class="mb-3">Backhand Effectiveness</h6>
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="text-muted mb-1">Winners</p>
+                                <h4 class="text-success">{{ statistics.shot_analysis.backhand.winners }}</h4>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted mb-1">Errors</p>
+                                <h4 class="text-danger">{{ statistics.shot_analysis.backhand.errors }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6 class="mb-3">Backhand Placement Distribution</h6>
+                        <div class="row">
+                            <div class="col-4 text-center">
+                                <div class="stat-card bg-light py-2">
+                                    <p class="mb-1">Cross Court</p>
+                                    <h5>{{ statistics.shot_analysis.backhand.placement.cross_court }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div class="stat-card bg-light py-2">
+                                    <p class="mb-1">Down the Line</p>
+                                    <h5>{{ statistics.shot_analysis.backhand.placement.down_the_line }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div class="stat-card bg-light py-2">
+                                    <p class="mb-1">Inside Out</p>
+                                    <h5>{{ statistics.shot_analysis.backhand.placement.inside_out }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Serve Analysis -->
+            <div class="stat-card">
+                <h5><i class="fas fa-tennis-ball me-2"></i>Serve Analysis</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <h6 class="mb-3">Serve Speed (km/h)</h6>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Average: {{ statistics.shot_analysis.serve.speed.avg }}</span>
+                            <span>Max: {{ statistics.shot_analysis.serve.speed.max }}</span>
+                            <span>Min: {{ statistics.shot_analysis.serve.speed.min }}</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: {{ statistics.shot_analysis.serve.speed.avg / 2 }}%"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <h6 class="mb-3">Serve Placement Distribution</h6>
+                        <div class="row">
+                            <div class="col-4 text-center">
+                                <div class="stat-card bg-light py-2">
+                                    <p class="mb-1">T</p>
+                                    <h5>{{ statistics.shot_analysis.serve.placement.t }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div class="stat-card bg-light py-2">
+                                    <p class="mb-1">Body</p>
+                                    <h5>{{ statistics.shot_analysis.serve.placement.body }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div class="stat-card bg-light py-2">
+                                    <p class="mb-1">Wide</p>
+                                    <h5>{{ statistics.shot_analysis.serve.placement.wide }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page Break for Print -->
+        <div class="page-break"></div>
+
+        <!-- Technique Analysis Section -->
+        <section class="mb-5">
+        <!-- Performance Overview Section -->
+        <section class="mb-5">
+            <h2 class="section-title">Performance Overview</h2>
+            <div class="stat-card">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="chart-container">
+                            <canvas id="performanceOverviewChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="chart-container">
+                            <canvas id="winLossChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shot Distribution & Placement Section -->
+        <section class="mb-5">
+            <h2 class="section-title">Shot Distribution & Placement</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="stat-card h-100">
+                        <h5>Shot Distribution</h5>
+                        <div class="chart-container">
+                            <canvas id="shotDistributionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="stat-card h-100">
+                        <h5>Shot Placement</h5>
+                        <div class="tennis-court">
+                            <!-- Court lines -->
+                            <div class="court-line court-net"></div>
+                            <div class="court-line court-center"></div>
+                            <div class="court-line court-service-line"></div>
+                            <div class="court-line court-service-line bottom"></div>
+                            
+                            <!-- Shot placement points will be added via JavaScript -->
+                        </div>
+                        <div class="d-flex justify-content-center mt-2">
+                            <div class="d-flex align-items-center me-3">
+                                <div class="shot-point shot-forehand me-1"></div>
+                                <span>Forehand</span>
+                            </div>
+                            <div class="d-flex align-items-center me-3">
+                                <div class="shot-point shot-backhand me-1"></div>
+                                <span>Backhand</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="shot-point shot-serve me-1"></div>
+                                <span>Serve</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page Break for Print -->
+        <div class="page-break"></div>
+
+        <!-- Serve Analysis Visualization -->
+        <section class="mb-5">
+            <h2 class="section-title">Serve Analysis Visualization</h2>
+            <div class="stat-card">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <h5>Serve Placement Distribution</h5>
+                        <div class="chart-container">
+                            <canvas id="servePlacementChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <h5>Serve Effectiveness</h5>
+                        <div class="chart-container">
+                            <canvas id="serveEffectivenessChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Player Movement Visualization -->
+        <section class="mb-5">
+            <h2 class="section-title">Player Movement Visualization</h2>
+            <div class="stat-card">
+                <div class="chart-container">
+                    <canvas id="playerMovementChart"></canvas>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-4 text-center">
+                        <h5>Court Coverage</h5>
+                        <p class="fs-4">{{ statistics.player_movement.distance_covered }} m</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h5>Movement Efficiency</h5>
+                        <p class="fs-4">{{ (statistics.player_movement.sprints / statistics.player_movement.direction_changes * 100)|round }}%</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h5>Response Time</h5>
+                        <p class="fs-4">{{ statistics.player_movement.sprints }} sprints</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+            <h2 class="section-title">Technique Analysis</h2>
+            
+            <div class="row">
+                <!-- Preparation Phase -->
+                <div class="col-md-6 mb-4">
+                    <div class="stat-card h-100">
+                        <h5><i class="fas fa-hourglass-start me-2"></i>Preparation Phase</h5>
+                        <div class="text-center mb-3">
+                            <div class="score-card" style="width: 80px; height: 80px; font-size: 1.5rem;">
+                                {{ statistics.game_phases.preparation.score }}
+                            </div>
+                            <p class="text-muted">Out of 100</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="text-muted mb-1">Grip Rating</p>
+                                <h5>{{ statistics.game_phases.preparation.grip_rating }}</h5>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted mb-1">Shoulder Rotation</p>
+                                <h5>{{ statistics.game_phases.preparation.shoulder_rotation }}</h5>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted mb-1">Stance Rating</p>
+                                <h5>{{ statistics.game_phases.preparation.stance_rating }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Backswing Phase -->
+                <div class="col-md-6 mb-4">
+                    <div class="stat-card h-100">
+                        <h5><i class="fas fa-undo me-2"></i>Backswing Phase</h5>
+                        <div class="text-center mb-3">
+                            <div class="score-card" style="width: 80px; height: 80px; font-size: 1.5rem;">
+                                {{ statistics.game_phases.backswing.score }}
+                            </div>
+                            <p class="text-muted">Out of 100</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="text-muted mb-1">Body Position</p>
+                                <h5>{{ statistics.game_phases.backswing.body_position }}</h5>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted mb-1">Racket Path</p>
+                                <h5>{{ statistics.game_phases.backswing.racket_path }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Phase -->
+                <div class="col-md-6 mb-4">
+                    <div class="stat-card h-100">
+                        <h5><i class="fas fa-bullseye me-2"></i>Contact Phase</h5>
+                        <div class="text-center mb-3">
+                            <div class="score-card" style="width: 80px; height: 80px; font-size: 1.5rem;">
+                                {{ statistics.game_phases.contact.score }}
+                            </div>
+                            <p class="text-muted">Out of 100</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="text-muted mb-1">Timing</p>
+                                <h5>{{ statistics.game_phases.contact.timing }}</h5>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted mb-1">Accuracy</p>
+                                <h5>{{ statistics.game_phases.contact.accuracy }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Follow Through Phase -->
+                <div class="col-md-6 mb-4">
+                    <div class="stat-card h-100">
+                        <h5><i class="fas fa-forward me-2"></i>Follow Through Phase</h5>
+                        <div class="text-center mb-3">
+                            <div class="score-card" style="width: 80px; height: 80px; font-size: 1.5rem;">
+                                {{ statistics.game_phases.follow_through.score }}
+                            </div>
+                            <p class="text-muted">Out of 100</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="text-muted mb-1">Balance</p>
+                                <h5>{{ statistics.game_phases.follow_through.balance }}</h5>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted mb-1">Completion</p>
+                                <h5>{{ statistics.game_phases.follow_through.completion }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Player Movement Section -->
+        <section class="mb-5">
+            <h2 class="section-title">Player Movement</h2>
+            
+            <div class="stat-card">
+                <div class="row">
+                    <div class="col-md-4 text-center mb-4">
+                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px;">
+                            <i class="fas fa-running fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="mb-2">Distance Covered</h5>
+                        <h3 class="mb-0">{{ statistics.player_movement.distance_covered }} m</h3>
+                    </div>
+                    <div class="col-md-4 text-center mb-4">
+                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px;">
+                            <i class="fas fa-exchange-alt fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="mb-2">Direction Changes</h5>
+                        <h3 class="mb-0">{{ statistics.player_movement.direction_changes }}</h3>
+                    </div>
+                    <div class="col-md-4 text-center mb-4">
+                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px;">
+                            <i class="fas fa-bolt fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="mb-2">Sprints</h5>
+                        <h3 class="mb-0">{{ statistics.player_movement.sprints }}</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Improvement Areas Section -->
+        <section class="mb-5">
+            <h2 class="section-title">Areas for Improvement</h2>
+            
+            <div class="stat-card">
+                <div class="row">
+                    {% for area in statistics.improvements.areas %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ area.title }}</h5>
+                                <p class="card-text">{{ area.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <!-- Report Footer -->
+        <footer class="mb-5 text-center">
+            <p class="text-muted">
+                This report was generated by Tennis Match Analytics on {{ now.strftime('%B %d, %Y at %H:%M') }}.
+                <br>
+                © 2025 Tennis Match Analytics
+            </p>
+        </footer>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<script>
+    // Chart Configuration
+    Chart.defaults.font.family = "'Inter', 'Helvetica', 'Arial', sans-serif";
+    Chart.defaults.font.size = 12;
+    Chart.defaults.color = '#4A5568';
+    Chart.defaults.plugins.legend.position = 'bottom';
+    Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(44, 82, 130, 0.8)';
+    Chart.defaults.plugins.tooltip.titleFont = { weight: 'bold' };
+    
+    // Load match statistics from the template
+    const statistics = {{ statistics|tojson }};
+    
+document.addEventListener('DOMContentLoaded', function() {
+    // 初始化Chart.js图表
+});
+        
+        // Win/Loss Chart
+        const winLossCtx = document.getElementById('winLossChart').getContext('2d');
+        new Chart(winLossCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Wins', 'Losses', 'Draws'],
+                datasets: [{
+                    data: getWinLossData(),
+                    backgroundColor: [
+                        'rgba(23, 177, 105, 0.8)',
+                        'rgba(229, 62, 62, 0.8)',
+                        'rgba(113, 128, 150, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(23, 177, 105, 1)',
+                        'rgba(229, 62, 62, 1)',
+                        'rgba(113, 128, 150, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Match Results'
+                    }
+                }
+            }
+        });
+        
+        // Shot Distribution Chart
+        const shotDistCtx = document.getElementById('shotDistributionChart').getContext('2d');
+        new Chart(shotDistCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Forehand', 'Backhand', 'Serve', 'Volley'],
+                datasets: [{
+                    data: getShotDistributionData(),
+                    backgroundColor: [
+                        'rgba(66, 153, 225, 0.8)',
+                        'rgba(245, 101, 101, 0.8)',
+                        'rgba(236, 201, 75, 0.8)',
+                        'rgba(129, 230, 217, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(66, 153, 225, 1)',
+                        'rgba(245, 101, 101, 1)',
+                        'rgba(236, 201, 75, 1)',
+                        'rgba(129, 230, 217, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
+        
+        // Add Shot Placement visualization
+        addShotPlacementVisualization();
+        
+        // Serve Placement Chart
+        const servePlacementCtx = document.getElementById('servePlacementChart').getContext('2d');
+        new Chart(servePlacementCtx, {
+            type: 'bar',
+            data: {
+                labels: ['T', 'Body', 'Wide'],
+                datasets: [{
+                    label: 'Serve Placement',
+                    data: getServePlacementData(),
+                    backgroundColor: 'rgba(236, 201, 75, 0.8)',
+                    borderColor: 'rgba(236, 201, 75, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        // Serve Effectiveness Chart
+        const serveEffCtx = document.getElementById('serveEffectivenessChart').getContext('2d');
+        new Chart(serveEffCtx, {
+            type: 'bar',
+            data: {
+                labels: ['First Serve %', 'First Serve Points Won %', 'Second Serve Points Won %'],
+                datasets: [{
+                    label: 'Serve Effectiveness',
+                    data: getServeEffectivenessData(),
+                    backgroundColor: 'rgba(23, 177, 105, 0.8)',
+                    borderColor: 'rgba(23, 177, 105, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+        
+        // Player Movement Chart (Heatmap simulation using bubble chart)
+        const playerMovementCtx = document.getElementById('playerMovementChart').getContext('2d');
+        new Chart(playerMovementCtx, {
+            type: 'bubble',
+            data: {
+                datasets: getPlayerMovementData()
+            },
+            options: {
+                scales: {
+                    x: {
+                        min: 0,
+                        max: 100,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.2)'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Court Width'
+                        }
+                    },
+                    y: {
+                        min: 0,
+                        max: 100,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.2)'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Court Length'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Court Coverage Heatmap'
+                    },
+                    legend: {
+                        display: true
+                    }
+                }
+            }
+        });
+    });
+    
+    // Utility functions to extract and process data
+    function getServeRating() {
+        let rating = 70; // Default value
+        
+        if (statistics && statistics.basic_stats) {
+            const bs = statistics.basic_stats;
+            const aces = bs.aces || 0;
+            const doubleFaults = bs.double_faults || 0;
+            const firstServePercentage = bs.first_serve_percentage || 0;
+            
+            // Calculate serve rating based on aces, double faults, and first serve percentage
+            rating = Math.min(100, Math.max(0, 
+                50 + 
+                (aces * 5) - 
+                (doubleFaults * 3) + 
+                (firstServePercentage - 50) / 2
+            ));
+        }
+        
+        return rating;
+    }
+    
+    function getForehandRating() {
+        let rating = 65; // Default value
+        
+        if (statistics && statistics.shot_analysis && statistics.shot_analysis.forehand) {
+            const forehand = statistics.shot_analysis.forehand;
+            const winners = forehand.winners || 0;
+            const errors = forehand.errors || 0;
+            const avgSpeed = forehand.speed && forehand.speed.avg ? forehand.speed.avg : 0;
+            
+            // Calculate forehand rating based on winners, errors, and speed
+            if (winners + errors > 0) {
+                const winnerRatio = winners / (winners + errors);
+                rating = Math.min(100, Math.max(0,
+                    60 + 
+                    (winnerRatio * 50) - 
+                    (errors > 20 ? 20 : 0) + 
+                    (avgSpeed > 80 ? 10 : 0)
+                ));
+            }
+        }
+        
+        return rating;
+    }
+    
+    function getBackhandRating() {
+        let rating = 60; // Default value
+        
+        if (statistics && statistics.shot_analysis && statistics.shot_analysis.backhand) {
+            const backhand = statistics.shot_analysis.backhand;
+            const winners = backhand.winners || 0;
+            const errors = backhand.errors || 0;
+            const avgSpeed = backhand.speed && backhand.speed.avg ? backhand.speed.avg : 0;
+            
+            // Calculate backhand rating based on winners, errors, and speed
+            if (winners + errors > 0) {
+                const winnerRatio = winners / (winners + errors);
+                rating = Math.min(100, Math.max(0,
+                    55 + 
+                    (winnerRatio * 45) - 
+                    (errors > 15 ? 15 : 0) + 
+                    (avgSpeed > 75 ? 15 : 0)
+                ));
+            }
+        }
+        
+        return rating;
+    }
+    
+    function getMovementRating() {
+        let rating = 75; // Default value
+        
+        if (statistics && statistics.player_movement) {
+            const movement = statistics.player_movement;
+            const distance = movement.distance_covered || 0;
+            const sprints = movement.sprints || 0;
+            const directionChanges = movement.direction_changes || 0;
+            
+            // Calculate movement rating based on distance, sprints, and direction changes
+            rating = Math.min(100, Math.max(0,
+                50 + 
+                (distance > 1000 ? 15 : distance / 100) + 
+                (sprints > 20 ? 15 : sprints / 2) + 
+                (directionChanges > 200 ? 20 : directionChanges / 10)
+            ));
+        }
+        
+        return rating;
+    }
+    
+    function getWinLossData() {
+        // In a real application, this would be based on historical data
+        // For this demo, we'll use the current match result
+        const result = '{{ match.match_result }}';
+        
+        if (result === 'win') {
+            return [1, 0, 0];
+        } else if (result === 'loss') {
+            return [0, 1, 0];
+        } else if (result === 'draw') {
+            return [0, 0, 1];
+        }
+        
+        // Default: one of each for visualization
+        return [1, 1, 1];
+    }
+    
+    function getShotDistributionData() {
+        let forehandCount = 30; // Default values
+        let backhandCount = 25;
+        let serveCount = 15;
+        let volleyCount = 10;
+        
+        if (statistics && statistics.shot_analysis) {
+            if (statistics.shot_analysis.forehand) {
+                const forehand = statistics.shot_analysis.forehand;
+                if (forehand.placement) {
+                    forehandCount = (forehand.placement.cross_court || 0) + 
+                                   (forehand.placement.down_the_line || 0) + 
+                                   (forehand.placement.inside_out || 0);
+                }
+            }
+            
+            if (statistics.shot_analysis.backhand) {
+                const backhand = statistics.shot_analysis.backhand;
+                if (backhand.placement) {
+                    backhandCount = (backhand.placement.cross_court || 0) + 
+                                   (backhand.placement.down_the_line || 0) + 
+                                   (backhand.placement.inside_out || 0);
+                }
+            }
+            
+            if (statistics.shot_analysis.serve) {
+                const serve = statistics.shot_analysis.serve;
+                if (serve.placement) {
+                    serveCount = (serve.placement.t || 0) + 
+                                (serve.placement.body || 0) + 
+                                (serve.placement.wide || 0);
+                }
+            }
+        }
+        
+        return [forehandCount, backhandCount, serveCount, volleyCount];
+    }
+    
+    function addShotPlacementVisualization() {
+        const tennisCourt = document.querySelector('.tennis-court');
+        
+        // Add forehand shots
+        if (statistics && statistics.shot_analysis && statistics.shot_analysis.forehand) {
+            const forehand = statistics.shot_analysis.forehand;
+            if (forehand.placement) {
+                const crossCourt = forehand.placement.cross_court || 0;
+                const downTheLine = forehand.placement.down_the_line || 0;
+                const insideOut = forehand.placement.inside_out || 0;
+                
+                // Add cross court shots
+                for (let i = 0; i < crossCourt; i++) {
+                    if (i % 3 === 0) { // Only add a subset of shots for visualization
+                        addShotPoint(tennisCourt, 30 + Math.random() * 20, 20 + Math.random() * 30, 'forehand');
+                    }
+                }
+                
+                // Add down the line shots
+                for (let i = 0; i < downTheLine; i++) {
+                    if (i % 3 === 0) {
+                        addShotPoint(tennisCourt, 70 + Math.random() * 20, 20 + Math.random() * 30, 'forehand');
+                    }
+                }
+                
+                // Add inside out shots
+                for (let i = 0; i < insideOut; i++) {
+                    if (i % 3 === 0) {
+                        addShotPoint(tennisCourt, 50 + Math.random() * 40, 40 + Math.random() * 10, 'forehand');
+                    }
+                }
+            }
+        }
+        
+        // Add backhand shots
+        if (statistics && statistics.shot_analysis && statistics.shot_analysis.backhand) {
+            const backhand = statistics.shot_analysis.backhand;
+            if (backhand.placement) {
+                const crossCourt = backhand.placement.cross_court || 0;
+                const downTheLine = backhand.placement.down_the_line || 0;
+                const insideOut = backhand.placement.inside_out || 0;
+                
+                // Add cross court shots
+                for (let i = 0; i < crossCourt; i++) {
+                    if (i % 3 === 0) {
+                        addShotPoint(tennisCourt, 70 + Math.random() * 20, 20 + Math.random() * 30, 'backhand');
+                    }
+                }
+                
+                // Add down the line shots
+                for (let i = 0; i < downTheLine; i++) {
+                    if (i % 3 === 0) {
+                        addShotPoint(tennisCourt, 30 + Math.random() * 20, 20 + Math.random() * 30, 'backhand');
+                    }
+                }
+                
+                // Add inside out shots
+                for (let i = 0; i < insideOut; i++) {
+                    if (i % 3 === 0) {
+                        addShotPoint(tennisCourt, 20 + Math.random() * 40, 40 + Math.random() * 10, 'backhand');
+                    }
+                }
+            }
+        }
+        
+        // Add serve shots
+        if (statistics && statistics.shot_analysis && statistics.shot_analysis.serve) {
+            const serve = statistics.shot_analysis.serve;
+            if (serve.placement) {
+                const t = serve.placement.t || 0;
+                const body = serve.placement.body || 0;
+                const wide = serve.placement.wide || 0;
+                
+                // Add T shots
+                for (let i = 0; i < t; i++) {
+                    if (i % 2 === 0) {
+                        addShotPoint(tennisCourt, 48 + Math.random() * 4, 75 + Math.random() * 5, 'serve');
+                    }
+                }
+                
+                // Add body shots
+                for (let i = 0; i < body; i++) {
+                    if (i % 2 === 0) {
+                        addShotPoint(tennisCourt, 50 + Math.random() * 10, 60 + Math.random() * 10, 'serve');
+                    }
+                }
+                
+                // Add wide shots
+                for (let i = 0; i < wide; i++) {
+                    if (i % 2 === 0) {
+                        addShotPoint(tennisCourt, 70 + Math.random() * 20, 70 + Math.random() * 10, 'serve');
+                        addShotPoint(tennisCourt, 10 + Math.random() * 20, 70 + Math.random() * 10, 'serve');
+                    }
+                }
+            }
+        }
+    }
+    
+    function addShotPoint(court, x, y, type) {
+        const point = document.createElement('div');
+        point.className = `shot-point shot-${type}`;
+        point.style.left = `${x}%`;
+        point.style.top = `${y}%`;
+        court.appendChild(point);
+    }
+    
+    function getServePlacementData() {
+        let t = 0;
+        let body = 0;
+        let wide = 0;
+        
+        if (statistics && statistics.shot_analysis && statistics.shot_analysis.serve && statistics.shot_analysis.serve.placement) {
+            t = statistics.shot_analysis.serve.placement.t || 0;
+            body = statistics.shot_analysis.serve.placement.body || 0;
+            wide = statistics.shot_analysis.serve.placement.wide || 0;
+        }
+        
+        return [t, body, wide];
+    }
+    
+    function getServeEffectivenessData() {
+        let firstServePercentage = 0;
+        let firstServePointsWon = 0;
+        let secondServePointsWon = 0;
+        
+        if (statistics && statistics.basic_stats) {
+            firstServePercentage = statistics.basic_stats.first_serve_percentage || 0;
+            firstServePointsWon = statistics.basic_stats.first_serve_points_won || 0;
+            secondServePointsWon = statistics.basic_stats.second_serve_points_won || 0;
+        }
+        
+        return [firstServePercentage, firstServePointsWon, secondServePointsWon];
+    }
+    
+    function getPlayerMovementData() {
+        // Create a heatmap-like visualization of player movement
+        const datasets = [
+            {
+                label: 'Defensive Zone',
+                data: [
+                    { x: 20, y: 80, r: 15 },
+                    { x: 50, y: 85, r: 20 },
+                    { x: 80, y: 80, r: 15 }
+                ],
+                backgroundColor: 'rgba(66, 153, 225, 0.6)'
+            },
+            {
+                label: 'Neutral Zone',
+                data: [
+                    { x: 30, y: 50, r: 12 },
+                    { x: 50, y: 50, r: 10 },
+                    { x: 70, y: 50, r: 12 }
+                ],
+                backgroundColor: 'rgba(236, 201, 75, 0.6)'
+            },
+            {
+                label: 'Offensive Zone',
+                data: [
+                    { x: 20, y: 20, r: 10 },
+                    { x: 50, y: 15, r: 15 },
+                    { x: 80, y: 20, r: 10 }
+                ],
+                backgroundColor: 'rgba(23, 177, 105, 0.6)'
+            }
+        ];
+        
+        // If we have player movement data, adjust bubble sizes
+        if (statistics && statistics.player_movement) {
+            const movement = statistics.player_movement;
+            const distanceCovered = movement.distance_covered || 1000;
+            const multiplier = distanceCovered / 1000;
+            
+            // Adjust bubble sizes based on distance covered
+            datasets.forEach(dataset => {
+                dataset.data.forEach(point => {
+                    point.r = Math.max(5, Math.min(25, point.r * multiplier));
+                });
+            });
+        }
+        
+        return datasets;
+    }
+</script>
 </body>
 </html>

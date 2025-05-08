@@ -64,7 +64,7 @@ def history():
     
     return render_template(
         'history.html',
-        matches=matches,
+        user_matches=matches,
         shared_matches=shared_matches,
         **get_template_date()
     )

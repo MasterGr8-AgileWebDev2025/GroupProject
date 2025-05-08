@@ -1,4 +1,3 @@
-
 import random
 
 # TODO: should probably add unit test here?
@@ -111,71 +110,186 @@ def calculate_overall_score(statistics):
     # Round to one decimal place
     return round(final_score, 1)
 
-def generate_match_analysis(analysis):
+def generate_match_analysis(statistics):
     """
     Generate match analysis data using AI (simulated for MVP).
     This would be replaced with actual AI analysis in production.
     """
+    # Initialize basic stats if not present
+    if 'basic_stats' not in statistics:
+        statistics['basic_stats'] = {}
+    
     # Simulate AI generating serve statistics
-    analysis.aces = random.randint(0, 8)
-    analysis.double_faults = random.randint(0, 5)
-    analysis.first_serve_percentage = round(random.uniform(40, 75), 1)
-    analysis.first_serve_points_won = random.randint(10, 40)
-    analysis.second_serve_points_won = random.randint(5, 20)
-    analysis.break_points_saved = random.randint(0, 5)
-    analysis.break_points_faced = random.randint(analysis.break_points_saved, analysis.break_points_saved + 5)
+    statistics['basic_stats']['aces'] = random.randint(0, 8)
+    statistics['basic_stats']['double_faults'] = random.randint(0, 5)
+    statistics['basic_stats']['first_serve_percentage'] = round(random.uniform(40, 75), 1)
+    statistics['basic_stats']['first_serve_points_won'] = random.randint(10, 40)
+    statistics['basic_stats']['second_serve_points_won'] = random.randint(5, 20)
+    statistics['basic_stats']['break_points_saved'] = random.randint(0, 5)
+    statistics['basic_stats']['break_points_faced'] = random.randint(
+        statistics['basic_stats']['break_points_saved'],
+        statistics['basic_stats']['break_points_saved'] + 5
+    )
+    statistics['basic_stats']['break_points_converted'] = random.randint(0, statistics['basic_stats']['break_points_faced'])
+    statistics['basic_stats']['total_points_won'] = random.randint(30, 70)
+    
+    # Initialize shot analysis if not present
+    if 'shot_analysis' not in statistics:
+        statistics['shot_analysis'] = {}
+    
+    # Add serve statistics to shot_analysis
+    statistics['shot_analysis']['serve'] = {
+        'speed': {
+            'avg': round(random.uniform(90, 130), 1),
+            'max': round(random.uniform(120, 150), 1),
+            'min': round(random.uniform(70, 100), 1),
+            'first_serve_avg': round(random.uniform(100, 140), 1),
+            'second_serve_avg': round(random.uniform(80, 110), 1)
+        },
+        'placement': {
+            'wide': random.randint(20, 40),
+            'body': random.randint(20, 40),
+            'tee': random.randint(20, 40)
+        },
+        'spin': {
+            'flat': random.randint(30, 50),
+            'slice': random.randint(20, 40),
+            'kick': random.randint(20, 40)
+        }
+    }
+    
+    # Add volley statistics
+    statistics['shot_analysis']['volley'] = {
+        'winners': random.randint(2, 10),
+        'errors': random.randint(1, 8),
+        'placement': {
+            'cross_court': random.randint(30, 50),
+            'down_the_line': random.randint(20, 40),
+            'middle': random.randint(10, 30)
+        }
+    }
     
     # Simulate AI generating stroke analysis
-    analysis.forehand_winners = random.randint(5, 20)
-    analysis.backhand_winners = random.randint(2, 15)
-    analysis.forehand_errors = random.randint(5, 20)
-    analysis.backhand_errors = random.randint(5, 20)
+    statistics['shot_analysis']['forehand'] = {
+        'winners': random.randint(5, 20),
+        'errors': random.randint(5, 20),
+        'speed': {
+            'avg': round(random.uniform(60, 90), 1),
+            'max': round(random.uniform(80, 110), 1)
+        },
+        'placement': {
+            'cross_court': random.randint(40, 60),
+            'down_the_line': random.randint(20, 40),
+            'inside_out': random.randint(10, 30),
+            'middle': random.randint(10, 30)
+        }
+    }
+    
+    statistics['shot_analysis']['backhand'] = {
+        'winners': random.randint(2, 15),
+        'errors': random.randint(5, 20),
+        'speed': {
+            'avg': round(random.uniform(50, 80), 1),
+            'max': round(random.uniform(70, 100), 1)
+        },
+        'placement': {
+            'cross_court': random.randint(40, 60),
+            'down_the_line': random.randint(20, 40),
+            'inside_out': random.randint(10, 30),
+            'middle': random.randint(10, 30)
+        }
+    }
+    
+    # Initialize player movement if not present
+    if 'player_movement' not in statistics:
+        statistics['player_movement'] = {}
     
     # Simulate AI generating movement analysis
-    analysis.distance_covered = round(random.uniform(1000, 5000), 1)
+    statistics['player_movement']['distance_covered'] = round(random.uniform(1000, 5000), 1)
+    statistics['player_movement']['sprints'] = random.randint(20, 50)
+    statistics['player_movement']['direction_changes'] = random.randint(200, 400)
+    
+    # Initialize game phases if not present
+    if 'game_phases' not in statistics:
+        statistics['game_phases'] = {}
     
     # Simulate AI generating technical scores
-    analysis.preparation_score = round(random.uniform(4, 9), 1)
-    analysis.contact_score = round(random.uniform(4, 9), 1)
-    analysis.follow_through_score = round(random.uniform(4, 9), 1)
+    statistics['game_phases']['preparation'] = {
+        'score': round(random.uniform(4, 9), 1),
+        'body_position': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'racket_position': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'footwork': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'timing': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'grip_rating': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'stance_rating': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'shoulder_rotation': random.choice(['Excellent', 'Good', 'Needs Improvement'])
+    }
+    
+    statistics['game_phases']['backswing'] = {
+        'score': round(random.uniform(4, 9), 1),
+        'body_position': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'racket_position': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'shoulder_rotation': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'timing': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'racket_path': random.choice(['Excellent', 'Good', 'Needs Improvement'])
+    }
+    
+    statistics['game_phases']['contact'] = {
+        'score': round(random.uniform(4, 9), 1),
+        'body_position': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'racket_position': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'ball_contact': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'timing': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'accuracy': random.choice(['Excellent', 'Good', 'Needs Improvement'])
+    }
+    
+    statistics['game_phases']['follow_through'] = {
+        'score': round(random.uniform(4, 9), 1),
+        'body_position': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'racket_position': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'recovery': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'timing': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'completion': random.choice(['Excellent', 'Good', 'Needs Improvement']),
+        'balance': random.choice(['Excellent', 'Good', 'Needs Improvement'])
+    }
     
     # Strengths and areas to improve based on scores
     strengths = []
     areas_to_improve = []
     
     # Check serve metrics
-    if analysis.aces > 5:
+    if statistics['basic_stats']['aces'] > 5:
         strengths.append("Excellent serving power, generating a high number of aces.")
-    elif analysis.aces < 2:
+    elif statistics['basic_stats']['aces'] < 2:
         areas_to_improve.append("Work on serve placement and power to increase ace count.")
     
-    if analysis.double_faults > 4:
+    if statistics['basic_stats']['double_faults'] > 4:
         areas_to_improve.append("Reduce double faults by focusing on consistent second serve technique.")
-    elif analysis.double_faults < 2:
+    elif statistics['basic_stats']['double_faults'] < 2:
         strengths.append("Consistent serving with minimal double faults.")
     
-    if analysis.first_serve_percentage > 65:
+    if statistics['basic_stats']['first_serve_percentage'] > 65:
         strengths.append("Strong first serve percentage, giving you an advantage in points.")
-    elif analysis.first_serve_percentage < 50:
+    elif statistics['basic_stats']['first_serve_percentage'] < 50:
         areas_to_improve.append("Improve first serve consistency to gain more control in service games.")
     
     # Check stroke metrics
-    if analysis.forehand_winners > 15:
+    if statistics['shot_analysis']['forehand']['winners'] > 15:
         strengths.append("Powerful forehand producing many winners.")
-    if analysis.backhand_winners > 10:
+    if statistics['shot_analysis']['backhand']['winners'] > 10:
         strengths.append("Effective backhand generating consistent winners.")
     
-    if analysis.forehand_errors > 15:
+    if statistics['shot_analysis']['forehand']['errors'] > 15:
         areas_to_improve.append("Reduce forehand unforced errors by improving technique and shot selection.")
-    if analysis.backhand_errors > 15:
+    if statistics['shot_analysis']['backhand']['errors'] > 15:
         areas_to_improve.append("Focus on backhand consistency to reduce errors.")
     
     # Check technical scores
-    if analysis.preparation_score < 6:
+    if statistics['game_phases']['preparation']['score'] < 6:
         areas_to_improve.append("Improve preparation phase of your strokes.")
-    if analysis.contact_score < 6:
+    if statistics['game_phases']['contact']['score'] < 6:
         areas_to_improve.append("Work on contact point consistency.")
-    if analysis.follow_through_score < 6:
+    if statistics['game_phases']['follow_through']['score'] < 6:
         areas_to_improve.append("Focus on complete follow-through to improve shot power and control.")
     
     # Ensure we have at least one strength and one area to improve
@@ -185,9 +299,9 @@ def generate_match_analysis(analysis):
     if not areas_to_improve:
         areas_to_improve.append("Continue refining your technique and tactical approach to elevate your game further.")
     
-    # Set strengths and areas to improve
-    analysis.strengths = "\n".join(strengths)
-    analysis.areas_to_improve = "\n".join(areas_to_improve)
+    # Add strengths and areas to improve to the statistics
+    statistics['strengths'] = "\n".join(strengths)
+    statistics['areas_to_improve'] = "\n".join(areas_to_improve)
     
-    return analysis
+    return statistics
 
