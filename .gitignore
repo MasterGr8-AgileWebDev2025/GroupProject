@@ -3,8 +3,23 @@
 ################################################################################
 
 /.vs
-/application-venv
+*application-venv
+*__pycache__
+*.pytest_cache
+*tennis_analytics.db
+.venv/
+/.idea
+*__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pywz
+*.pyzw
+
 *__pycache__
 /instance/tennis_analytics.db
 .venv/
 /.idea
+

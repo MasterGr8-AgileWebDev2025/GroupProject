@@ -9,6 +9,7 @@ from routes.utils import get_template_date
 # Create blueprint
 main_bp = Blueprint('main', __name__)
 
+# TODO: should we add unit test here?
 @main_bp.route('/')
 def index():
     """Homepage route"""

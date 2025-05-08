@@ -18,6 +18,7 @@ from routes.utils import check_match_access, get_template_date
 # Create blueprint
 match_bp = Blueprint('match', __name__)
 
+# TODO: should we add unit test here?
 @match_bp.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload_match():
