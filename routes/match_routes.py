@@ -18,7 +18,6 @@ from routes.utils import check_match_access, get_template_date
 # Create blueprint
 match_bp = Blueprint('match', __name__)
 
-# TODO: should we add unit test here?
 @match_bp.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload_match():
@@ -108,12 +107,12 @@ def upload_match():
             flash(f'Error processing Excel data: {str(e)}', 'danger')
             db.session.delete(match)
             db.session.commit()
-            return render_template('upload.html', manual_form=form, excel_form=excel_form, **get_template_date())
+            return render_template('upload.html', form=form, excel_form=excel_form, **get_template_date())
         
         flash('Match uploaded and processed successfully!', 'success')
         return redirect(url_for('match.analysis', match_id=match.id))
     
-    return render_template('upload.html', manual_form=form, excel_form=excel_form, **get_template_date())
+    return render_template('upload.html', form=form, excel_form=excel_form, **get_template_date())
 
 @match_bp.route('/analysis/<int:match_id>')
 @login_required
@@ -141,7 +140,6 @@ def analysis(match_id):
         match_analysis=match_analysis,
         **get_template_date()
     )
-
 
 @match_bp.route('/match/<int:match_id>')
 @login_required
