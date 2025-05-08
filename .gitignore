@@ -17,3 +17,9 @@
 *.pyz
 *.pywz
 *.pyzw
+
+*__pycache__
+/instance/tennis_analytics.db
+.venv/
+/.idea
+
