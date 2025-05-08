@@ -3,93 +3,73 @@
 {% block title %}Match History - Tennis Match Analytics{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h1 class="mb-1">Match History</h1>
-        <p class="text-muted">View and analyze your tennis match history</p>
+<div class="mb-5">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="mb-1">Match History</h1>
+            <p class="text-muted">View and analyze your past matches</p>
+        </div>
+        <div>
+            <a href="{{ url_for('match.upload_match') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Upload New Match
+            </a>
+        </div>
     </div>
-    <div>
-        <a href="{{ url_for('match.upload_match') }}" class="btn btn-primary">
-            <i class="fas fa-plus me-2"></i>Upload New Match
-        </a>
-    </div>
-</div>
 
-<!-- Filter Bar -->
-<div class="card mb-4">
-    <div class="card-body">
-        <div class="row g-3">
-            <div class="col-md-3">
-                <label for="date-range" class="form-label">Date Range</label>
-                <select id="date-range" class="form-select">
-                    <option value="all" selected>All Time</option>
-                    <option value="this-month">This Month</option>
-                    <option value="last-3-months">Last 3 Months</option>
-                    <option value="last-6-months">Last 6 Months</option>
-                    <option value="this-year">This Year</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label for="opponent-filter" class="form-label">Opponent</label>
-                <select id="opponent-filter" class="form-select">
-                    <option value="all" selected>All Opponents</option>
-                    {% for opponent in opponents %}
-                        <option value="{{ opponent }}">{{ opponent }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label for="location-filter" class="form-label">Location</label>
-                <select id="location-filter" class="form-select">
-                    <option value="all" selected>All Locations</option>
-                    {% for location in locations %}
-                        <option value="{{ location }}">{{ location }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label for="result-filter" class="form-label">Result</label>
-                <select id="result-filter" class="form-select">
-                    <option value="all" selected>All Results</option>
-                    <option value="win">Wins</option>
-                    <option value="loss">Losses</option>
-                    <option value="draw">Draws</option>
-                </select>
+    <!-- Filter Bar -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label for="date-filter" class="form-label">Date Range</label>
+                    <select id="date-filter" class="form-select filter-control">
+                        <option value="all">All Time</option>
+                        <option value="last-month">Last Month</option>
+                        <option value="last-3-months">Last 3 Months</option>
+                        <option value="last-6-months">Last 6 Months</option>
+                        <option value="last-year">Last Year</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="match-type" class="form-label">Match Type</label>
+                    <select id="match-type" class="form-select filter-control">
+                        <option value="all">All Matches</option>
+                        <option value="singles">Singles</option>
+                        <option value="doubles">Doubles</option>
+                        <option value="practice">Practice</option>
+                        <option value="tournament">Tournament</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="opponent-filter" class="form-label">Opponent</label>
+                    <select id="opponent-filter" class="form-select filter-control">
+                        <option value="all">All Opponents</option>
+                        {% for match in user_matches %}
+                            {% if match.opponent and match.opponent not in opponents_list %}
+                                <option value="{{ match.opponent }}">{{ match.opponent }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- My Matches Tab -->
-<ul class="nav nav-tabs mb-4" id="historyTabs" role="tablist">
-    <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="my-matches-tab" data-bs-toggle="tab" data-bs-target="#my-matches" type="button" role="tab" aria-controls="my-matches" aria-selected="true">
-            <i class="fas fa-user me-1"></i>My Matches
-        </button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="shared-matches-tab" data-bs-toggle="tab" data-bs-target="#shared-matches" type="button" role="tab" aria-controls="shared-matches" aria-selected="false">
-            <i class="fas fa-share-alt me-1"></i>Shared With Me
-        </button>
-    </li>
-</ul>
-
-<!-- Tab Content -->
-<div class="tab-content" id="historyTabContent">
-    <!-- My Matches Tab Panel -->
-    <div class="tab-pane fade show active" id="my-matches" role="tabpanel" aria-labelledby="my-matches-tab">
-        {% if user_matches %}
-            <div class="card shadow-sm">
+    <!-- Your Matches -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Your Matches</h5>
+        </div>
+        <div class="card-body">
+            {% if user_matches %}
                 <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
+                    <table class="table table-hover">
+                        <thead>
                             <tr>
                                 <th>Date</th>
-                                <th>Match Title</th>
+                                <th>Match</th>
                                 <th>Opponent</th>
-                                <th>Score</th>
-                                <th>Result</th>
                                 <th>Location</th>
                                 <th>Actions</th>
                             </tr>
@@ -99,37 +79,16 @@
                             <tr>
                                 <td>{{ match.date.strftime('%b %d, %Y') }}</td>
                                 <td>{{ match.title }}</td>
-                                <td>{% if match.opponent %}{{ match.opponent }}{% else %}<span class="text-muted">N/A</span>{% endif %}</td>
-                                <td>
-                                    {% if match.user_score and match.opponent_score %}
-                                        <span class="fw-medium">{{ match.user_score }}</span> - <span class="text-muted">{{ match.opponent_score }}</span>
-                                    {% else %}
-                                        <span class="text-muted">N/A</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if match.match_result == 'win' %}
-                                        <span class="badge bg-success">Win</span>
-                                    {% elif match.match_result == 'loss' %}
-                                        <span class="badge bg-danger">Loss</span>
-                                    {% elif match.match_result == 'draw' %}
-                                        <span class="badge bg-secondary">Draw</span>
-                                    {% else %}
-                                        <span class="badge bg-light text-dark">N/A</span>
-                                    {% endif %}
-                                </td>
-                                <td>{% if match.location %}{{ match.location }}{% else %}<span class="text-muted">N/A</span>{% endif %}</td>
+                                <td>{{ match.opponent }}</td>
+                                <td>{{ match.location }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <a href="{{ url_for('match.match_details', match_id=match.id) }}" class="btn btn-sm btn-outline-info">
-                                            <i class="fas fa-eye me-1"></i>Details
-                                        </a>
                                         <a href="{{ url_for('match.analysis', match_id=match.id) }}" class="btn btn-sm btn-outline-primary">
                                             <i class="fas fa-chart-bar me-1"></i>Analyze
                                         </a>
-                                        <a href="{{ url_for('share.share') }}?match_id={{ match.id }}" class="btn btn-sm btn-outline-secondary">
+                                        <button class="btn btn-sm btn-outline-secondary share-match-btn" data-match-id="{{ match.id }}">
                                             <i class="fas fa-share-alt me-1"></i>Share
-                                        </a>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -137,212 +96,95 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-        {% else %}
-            <div class="text-center py-5">
-                <div class="mb-3">
-                    <i class="fas fa-tennis-ball fa-3x text-muted"></i>
+            {% else %}
+                <div class="text-center py-4">
+                    <p class="text-muted mb-0">No matches found</p>
                 </div>
-                <h5>No matches found</h5>
-                <p class="text-muted">Upload your first match to see your history</p>
-                <a href="{{ url_for('match.upload_match') }}" class="btn btn-primary">
-                    <i class="fas fa-plus me-1"></i>Upload Match
-                </a>
-            </div>
-        {% endif %}
+            {% endif %}
+        </div>
     </div>
-    
-    <!-- Shared Matches Tab Panel -->
-    <div class="tab-pane fade" id="shared-matches" role="tabpanel" aria-labelledby="shared-matches-tab">
-        {% if shared_matches %}
-            <div class="card shadow-sm">
+
+    <!-- Shared with Me -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Shared with Me</h5>
+        </div>
+        <div class="card-body">
+            {% if shared_matches %}
                 <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
+                    <table class="table table-hover">
+                        <thead>
                             <tr>
                                 <th>Date</th>
-                                <th>Match Title</th>
+                                <th>Match</th>
                                 <th>Shared By</th>
-                                <th>Opponent</th>
-                                <th>Score</th>
-                                <th>Result</th>
-                                <th>Location</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for match in shared_matches %}
+                            {% for shared in shared_matches %}
                             <tr>
-                                <td>{{ match.date.strftime('%b %d, %Y') }}</td>
-                                <td>{{ match.title }}</td>
-                                <td>{{ match.owner.username }}</td>
-                                <td>{% if match.opponent %}{{ match.opponent }}{% else %}<span class="text-muted">N/A</span>{% endif %}</td>
+                                <td>{{ shared.match.date.strftime('%b %d, %Y') }}</td>
+                                <td>{{ shared.match.title }}</td>
+                                <td>{{ shared.shared_by.username }}</td>
                                 <td>
-                                    {% if match.user_score and match.opponent_score %}
-                                        <span class="fw-medium">{{ match.user_score }}</span> - <span class="text-muted">{{ match.opponent_score }}</span>
-                                    {% else %}
-                                        <span class="text-muted">N/A</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if match.match_result == 'win' %}
-                                        <span class="badge bg-success">Win</span>
-                                    {% elif match.match_result == 'loss' %}
-                                        <span class="badge bg-danger">Loss</span>
-                                    {% elif match.match_result == 'draw' %}
-                                        <span class="badge bg-secondary">Draw</span>
-                                    {% else %}
-                                        <span class="badge bg-light text-dark">N/A</span>
-                                    {% endif %}
-                                </td>
-                                <td>{% if match.location %}{{ match.location }}{% else %}<span class="text-muted">N/A</span>{% endif %}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a href="{{ url_for('match.match_details', match_id=match.id) }}" class="btn btn-sm btn-outline-info">
-                                            <i class="fas fa-eye me-1"></i>Details
-                                        </a>
-                                        <a href="{{ url_for('match.analysis', match_id=match.id) }}" class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-chart-bar me-1"></i>View Analysis
-                                        </a>
-                                    </div>
+                                    <a href="{{ url_for('match.analysis', match_id=shared.match.id) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-chart-bar me-1"></i>View Analysis
+                                    </a>
                                 </td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-            </div>
-        {% else %}
-            <div class="text-center py-5">
-                <div class="mb-3">
-                    <i class="fas fa-share-alt fa-3x text-muted"></i>
+            {% else %}
+                <div class="text-center py-4">
+                    <p class="text-muted mb-0">No matches have been shared with you yet</p>
                 </div>
-                <h5>No shared matches found</h5>
-                <p class="text-muted">When others share match analyses with you, they'll appear here</p>
-            </div>
-        {% endif %}
+            {% endif %}
+        </div>
     </div>
 </div>
 
-<!-- Progress Summary Card -->
-<div class="card mt-5">
-    <div class="card-header">
-        <h5 class="mb-0">Performance Analysis</h5>
-    </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body text-center">
-                        {% set win_count = user_matches|selectattr('match_result', 'equalto', 'win')|list|length %}
-                        {% set loss_count = user_matches|selectattr('match_result', 'equalto', 'loss')|list|length %}
-                        {% set draw_count = user_matches|selectattr('match_result', 'equalto', 'draw')|list|length %}
-                        
-                        <h2 class="display-4 mb-2">{{ win_count }}-{{ loss_count }}</h2>
-                        <p class="text-muted">Win-Loss Record</p>
-                        
-                        <div class="d-flex justify-content-center gap-3 mt-3">
-                            <div>
-                                <span class="d-block fw-bold text-success">{{ win_count }}</span>
-                                <small class="text-muted">Wins</small>
-                            </div>
-                            <div>
-                                <span class="d-block fw-bold text-danger">{{ loss_count }}</span>
-                                <small class="text-muted">Losses</small>
-                            </div>
-                            <div>
-                                <span class="d-block fw-bold text-secondary">{{ draw_count }}</span>
-                                <small class="text-muted">Draws</small>
-                            </div>
-                        </div>
+<!-- Share Match Modal -->
+<div class="modal fade" id="shareMatchModal" tabindex="-1" aria-labelledby="shareMatchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shareMatchModalLabel">Share Match</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="shareMatchForm" method="POST" action="{{ url_for('share.share') }}">
+                    <input type="hidden" name="match_id" id="shareMatchId">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Share with:</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
                     </div>
-                </div>
+                </form>
             </div>
-            <div class="col-md-8 mb-4">
-                <div class="chart-container" style="height: 250px;">
-                    <canvas id="resultsChart"></canvas>
-                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="shareMatchForm" class="btn btn-primary">Share</button>
             </div>
-        </div>
-        
-        <div class="alert alert-info mt-2">
-            <i class="fas fa-info-circle me-2"></i>
-            <strong>Performance tracking:</strong> As you add more matches, you'll see your progress over time in these charts. Upload regularly to track your improvement!
         </div>
     </div>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
-<!-- History Page Scripts -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Filter functionality
-    const dateRange = document.getElementById('date-range');
-    const opponentFilter = document.getElementById('opponent-filter');
-    const locationFilter = document.getElementById('location-filter');
-    const resultFilter = document.getElementById('result-filter');
-    
-    const filters = [dateRange, opponentFilter, locationFilter, resultFilter];
-    
-    filters.forEach(filter => {
-        filter.addEventListener('change', function() {
-            // In a real implementation, this would filter the data
-            // For now, we'll just show a message
-            console.log('Filter applied:', this.id, this.value);
+    // Handle share match button clicks
+    const shareButtons = document.querySelectorAll('.share-match-btn');
+    shareButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const matchId = this.getAttribute('data-match-id');
+            document.getElementById('shareMatchId').value = matchId;
+            const modal = new bootstrap.Modal(document.getElementById('shareMatchModal'));
+            modal.show();
         });
     });
-    
-    // Initialize results chart
-    initializeResultsChart();
 });
-
-function initializeResultsChart() {
-    // Get the counts from the page
-    const winCount = parseInt(document.querySelector('.d-flex .fw-bold.text-success').textContent);
-    const lossCount = parseInt(document.querySelector('.d-flex .fw-bold.text-danger').textContent);
-    const drawCount = parseInt(document.querySelector('.d-flex .fw-bold.text-secondary').textContent);
-    
-    // Results Chart
-    const resultsCtx = document.getElementById('resultsChart').getContext('2d');
-    new Chart(resultsCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Latest Matches (Most Recent First)'],
-            datasets: [
-                {
-                    label: 'Wins',
-                    data: [winCount],
-                    backgroundColor: '#17B169'
-                },
-                {
-                    label: 'Losses',
-                    data: [lossCount],
-                    backgroundColor: '#E53E3E'
-                },
-                {
-                    label: 'Draws',
-                    data: [drawCount],
-                    backgroundColor: '#718096'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    stacked: true,
-                },
-                y: {
-                    stacked: true,
-                    beginAtZero: true,
-                    precision: 0
-                }
-            }
-        }
-    });
-}
 </script>
 {% endblock %}
