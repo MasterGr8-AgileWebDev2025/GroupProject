@@ -107,12 +107,12 @@ def upload_match():
             flash(f'Error processing Excel data: {str(e)}', 'danger')
             db.session.delete(match)
             db.session.commit()
-            return render_template('upload.html', form=form, excel_form=excel_form, **get_template_date())
+            return render_template('upload.html', manual_form=form, excel_form=excel_form, **get_template_date())
         
         flash('Match uploaded and processed successfully!', 'success')
         return redirect(url_for('match.analysis', match_id=match.id))
     
-    return render_template('upload.html', form=form, excel_form=excel_form, **get_template_date())
+    return render_template('upload.html', manual_form=form, excel_form=excel_form, **get_template_date())
 
 @match_bp.route('/analysis/<int:match_id>')
 @login_required

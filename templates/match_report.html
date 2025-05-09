@@ -259,9 +259,13 @@
                         <div class="col-md-6">
                             <h5>Areas for Improvement</h5>
                             <ul>
-                                {% for area in statistics.improvements.areas %}
-                                <li><strong>{{ area.title }}:</strong> {{ area.description }}</li>
-                                {% endfor %}
+                                {% if statistics.improvements and statistics.improvements.areas %}
+                                    {% for area in statistics.improvements.areas %}
+                                    <li><strong>{{ area.title }}:</strong> {{ area.description }}</li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li>No specific improvement areas identified for this match.</li>
+                                {% endif %}
                             </ul>
                         </div>
                     </div>
@@ -532,7 +536,12 @@
                                 </tr>
                                 <tr>
                                     <td>Total Serves</td>
-                                    <td class="text-end fw-bold">{{ statistics.shot_analysis.serve.placement.t + statistics.shot_analysis.serve.placement.body + statistics.shot_analysis.serve.placement.wide }}</td>
+                                    <td class="text-end fw-bold">
+                                        {% set t_serves = statistics.shot_analysis.serve.placement.t|default(0) %}
+                                        {% set body_serves = statistics.shot_analysis.serve.placement.body|default(0) %}
+                                        {% set wide_serves = statistics.shot_analysis.serve.placement.wide|default(0) %}
+                                        {{ t_serves + body_serves + wide_serves }}
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -719,16 +728,27 @@
                     
                     <h5 class="mt-4">Improvement Recommendations</h5>
                     <div class="row">
-                        {% for area in statistics.improvements.areas %}
-                        <div class="col-12 mb-3">
-                            <div class="card border-0 shadow-sm">
-                                <div class="card-body">
-                                    <h5 class="card-title text-primary">{{ area.title }}</h5>
-                                    <p class="card-text">{{ area.description }}</p>
+                        {% if statistics.improvements and statistics.improvements.areas %}
+                            {% for area in statistics.improvements.areas %}
+                            <div class="col-12 mb-3">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-primary">{{ area.title }}</h5>
+                                        <p class="card-text">{{ area.description }}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        {% endfor %}
+                            {% endfor %}
+                        {% else %}
+                            <div class="col-12 mb-3">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-primary">General Recommendation</h5>
+                                        <p class="card-text">Continue practicing and tracking your matches to receive personalized improvement recommendations.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
