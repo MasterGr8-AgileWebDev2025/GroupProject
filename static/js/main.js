@@ -141,3 +141,108 @@ document.addEventListener('DOMContentLoaded', function() {
         text.className = strengthClass;
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.querySelector('.testimonial-carousel');
+    if (!carousel) return;
+
+    // Pause animation on mouse enter
+    carousel.addEventListener('mouseenter', function() {
+        this.style.animationPlayState = 'paused';
+    });
+
+    // Resume animation on mouse leave
+    carousel.addEventListener('mouseleave', function() {
+        this.style.animationPlayState = 'running';
+    });
+
+    // For touch devices
+    carousel.addEventListener('touchstart', function() {
+        this.style.animationPlayState = 'paused';
+    });
+
+    carousel.addEventListener('touchend', function() {
+        this.style.animationPlayState = 'running';
+    });
+});
+
+/**
+ * Hero Title Animation
+ *
+ * This script creates a letter-by-letter reveal animation for the hero title.
+ * Each letter of the title appears sequentially with a slight delay between them,
+ * creating a typing-like effect.
+ *
+ * The title text is taken from the 'data-text' attribute of the hero-title element,
+ * and each letter is wrapped in a span with the 'letter' class for individual animation.
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the hero title element
+    const heroTitle = document.querySelector('.hero-title');
+
+    // Exit if hero title doesn't exist on the page
+    if (!heroTitle) return;
+
+    // Get the original text from data-text attribute
+    const originalText = heroTitle.getAttribute('data-text');
+
+    // Clear the title content to prepare for animation
+    heroTitle.innerHTML = '';
+
+    // Split the title into two roughly equal lines
+    const words = originalText.split(' ');
+    const totalWords = words.length;
+    const midPoint = Math.ceil(totalWords / 2);
+
+    // First line (first half of the words)
+    const firstLine = words.slice(0, midPoint).join(' ');
+
+    // Second line (second half of the words)
+    const secondLine = words.slice(midPoint).join(' ');
+
+    // Process first line - create span for EACH CHARACTER (including spaces)
+    for (let i = 0; i < firstLine.length; i++) {
+        const letter = document.createElement('span');
+        letter.className = 'letter';
+
+        // Preserve spaces (using non-breaking space for visibility)
+        if (firstLine[i] === ' ') {
+            letter.innerHTML = '&nbsp;';
+        } else {
+            letter.textContent = firstLine[i];
+        }
+
+        heroTitle.appendChild(letter);
+    }
+
+    // Add line break between the two lines
+    heroTitle.appendChild(document.createElement('br'));
+
+    // Process second line - create span for EACH CHARACTER (including spaces)
+    for (let i = 0; i < secondLine.length; i++) {
+        const letter = document.createElement('span');
+        letter.className = 'letter';
+
+        // Preserve spaces (using non-breaking space for visibility)
+        if (secondLine[i] === ' ') {
+            letter.innerHTML = '&nbsp;';
+        } else {
+            letter.textContent = secondLine[i];
+        }
+
+        heroTitle.appendChild(letter);
+    }
+
+    // Get all letter elements for animation
+    const letters = heroTitle.querySelectorAll('.letter');
+
+    // Set delay between each letter appearance (in milliseconds)
+    let letterDelay = 30; // Adjust this value to control animation speed
+
+    // Animate each letter with incremental delay
+    letters.forEach((letter, index) => {
+        setTimeout(() => {
+            letter.classList.add('visible');
+        }, index * letterDelay);
+    });
+});

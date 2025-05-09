@@ -2,90 +2,78 @@
 
 {% block title %}TennisAI - Elevate Your Tennis Game{% endblock %}
 
-{% block content %}
+{% block hero %}
 <!-- Hero Section -->
-<section class="hero-section rounded shadow mb-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 hero-content">
-                <h1 class="hero-title">Elevate Your Tennis Game With AI Analysis</h1>
-                <p class="hero-subtitle">Upload your tennis photos or videos and get instant professional analysis and personalized improvement tips.</p>
-                <div class="d-flex flex-wrap">
+<section class="hero-section">
+    <img class="hero-bg-img" src="{{ url_for('static', filename='images/tennis.jpg') }}" alt="Tennis Background">
+    <div class="hero-overlay"></div>
+    <div class="container-fluid h-100 px-0">
+        <div class="row h-100 align-items-center">
+            <div class="col-lg-5"></div>
+            <div class="col-lg-7 hero-content text-white text-end">
+                <h1 class="hero-title" data-text="Elevate Your Tennis Game With AI Analysis"></h1>
+                <p class="hero-subtitle">
+                    Upload your tennis photos or videos and get instant professional analysis and personalized improvement tips.
+                </p>
+                <div class="d-flex flex-wrap justify-content-end">
                     {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('match.upload_match') }}" class="btn btn-primary btn-lg me-3 mb-3">Start Analysis</a>
-                    <a href="{{ url_for('user.dashboard') }}" class="btn btn-outline-secondary btn-lg mb-3">View Dashboard</a>
+                    <a href="{{ url_for('match.upload_match') }}" class="btn btn-light btn-lg me-3 mb-3">Start Analysis</a>
+                    <a href="{{ url_for('user.dashboard') }}" class="btn btn-outline-light btn-lg mb-3">View Dashboard</a>
                     {% else %}
-                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg me-3 mb-3">Get Started</a>
-                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary btn-lg mb-3">Login</a>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg me-3 mb-3">Get Started</a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg mb-3">Login</a>
                     {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-6 d-none d-lg-block">
-                <div class="tennis-player-image">
-                    <svg width="100%" height="100%" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Tennis court background -->
-                        <rect x="50" y="50" width="500" height="300" fill="#D2B48C" rx="5" />
-                        <rect x="50" y="200" width="500" height="1" fill="white" />
-                        <rect x="300" y="50" width="1" height="300" fill="white" />
-                        <circle cx="300" cy="200" r="50" stroke="white" stroke-width="1" fill="none" />
-                        
-                        <!-- Player silhouette -->
-                        <g transform="translate(250, 150)">
-                            <path d="M40,10 C45,0 55,0 60,10 C65,20 65,30 60,40 L70,70 L60,75 L45,45 C35,55 25,55 15,45 L0,75 L-10,70 L0,40 C-5,30 -5,20 0,10 C5,0 15,0 20,5 C25,-5 35,-5 40,10 Z" fill="#17B169" />
-                            <line x1="45" y1="45" x2="85" y2="25" stroke="#2C5282" stroke-width="3" />
-                            <circle cx="95" cy="15" r="10" fill="#2C5282" />
-                        </g>
-                        
-                        <!-- Ball trajectory -->
-                        <path d="M340,140 Q420,90 480,140" stroke="#E53E3E" stroke-width="2" stroke-dasharray="5,5" fill="none" />
-                        <circle cx="480" cy="140" r="6" fill="#E53E3E" />
-                    </svg>
                 </div>
             </div>
         </div>
     </div>
 </section>
+{% endblock %}
 
+
+{% block content %}
 <!-- How It Works Section -->
-<section class="mb-5">
-    <div class="text-center mb-5">
-        <h2>How TennisAI Works</h2>
-        <p class="lead">Simple 3-step process to improve your tennis game</p>
-    </div>
-    
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-upload"></i>
+<section class="section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>How TennisAI Works</h2>
+            <p class="lead">Simple 3-step process to improve your tennis game</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-upload"></i>
+                        </div>
+                        <h3>1. Upload</h3>
+                        <p>Upload your tennis photos or videos. Our system supports various formats to analyze your technique.</p>
                     </div>
-                    <h3>1. Upload</h3>
-                    <p>Upload your tennis photos or videos. Our system supports various formats to analyze your technique.</p>
                 </div>
             </div>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
+
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>2. Analyze</h3>
+                        <p>Our AI analyzes your form, detects keypoints, and evaluates your technique in real-time.</p>
                     </div>
-                    <h3>2. Analyze</h3>
-                    <p>Our AI analyzes your form, detects keypoints, and evaluates your technique in real-time.</p>
                 </div>
             </div>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-award"></i>
+
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <h3>3. Improve</h3>
+                        <p>Get detailed feedback, scoring, and personalized tips to improve your tennis technique.</p>
                     </div>
-                    <h3>3. Improve</h3>
-                    <p>Get detailed feedback, scoring, and personalized tips to improve your tennis technique.</p>
                 </div>
             </div>
         </div>
@@ -93,91 +81,93 @@
 </section>
 
 <!-- Analysis Process Section -->
-<section class="analysis-process-section bg-light p-4 rounded mb-5">
-    <div class="text-center mb-4">
-        <h2>The Analysis Process</h2>
-        <p class="lead">Advanced AI technology breaks down your technique</p>
-    </div>
-    
-    <div class="row">
-        <div class="col-lg-6 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-chart-bar text-primary me-2"></i> Data Analysis</h5>
-                    <ul class="list-group list-group-flush mt-3">
-                        <li class="list-group-item">
-                            <div class="d-flex align-items-center">
-                                <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white" style="width: 30px; height: 30px;">1</div>
-                                <div class="ms-3">
-                                    <h6 class="mb-1">Pose Detection</h6>
-                                    <p class="mb-0 text-muted">Our AI detects 33 body keypoints to analyze your form.</p>
+<section class="section bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>The Analysis Process</h2>
+            <p class="lead">Advanced AI technology breaks down your technique</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-chart-bar text-primary me-2"></i> Data Analysis</h5>
+                        <ul class="list-group list-group-flush mt-3">
+                            <li class="list-group-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white" style="width: 30px; height: 30px;">1</div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-1">Pose Detection</h6>
+                                        <p class="mb-0 text-muted">Our AI detects 33 body keypoints to analyze your form.</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="d-flex align-items-center">
-                                <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white" style="width: 30px; height: 30px;">2</div>
-                                <div class="ms-3">
-                                    <h6 class="mb-1">Shot Classification</h6>
-                                    <p class="mb-0 text-muted">Identifies your shot type (forehand, backhand, serve).</p>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white" style="width: 30px; height: 30px;">2</div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-1">Shot Classification</h6>
+                                        <p class="mb-0 text-muted">Identifies your shot type (forehand, backhand, serve).</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="d-flex align-items-center">
-                                <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white" style="width: 30px; height: 30px;">3</div>
-                                <div class="ms-3">
-                                    <h6 class="mb-1">Stage Analysis</h6>
-                                    <p class="mb-0 text-muted">Breaks down your stroke into stages: preparation, backswing, contact, follow-through.</p>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white" style="width: 30px; height: 30px;">3</div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-1">Stage Analysis</h6>
+                                        <p class="mb-0 text-muted">Breaks down your stroke into stages: preparation, backswing, contact, follow-through.</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="d-flex align-items-center">
-                                <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white" style="width: 30px; height: 30px;">4</div>
-                                <div class="ms-3">
-                                    <h6 class="mb-1">Score Calculation</h6>
-                                    <p class="mb-0 text-muted">Compares your technique against professional models.</p>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white" style="width: 30px; height: 30px;">4</div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-1">Score Calculation</h6>
+                                        <p class="mb-0 text-muted">Compares your technique against professional models.</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                    </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="col-lg-6 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-clipboard-check text-primary me-2"></i> Analysis Results</h5>
-                    <div class="mt-4">
-                        <div class="mb-4">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h6>Preparation Phase</h6>
-                                <span class="badge bg-success rounded-pill">8.4</span>
-                            </div>
-                            <div class="progress">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 84%" aria-valuenow="84" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <div class="mt-2">
-                                <div class="d-flex align-items-center mb-1">
-                                    <i class="fas fa-check-circle text-success me-2"></i>
-                                    <span>Excellent Grip Position</span>
+
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-clipboard-check text-primary me-2"></i> Analysis Results</h5>
+                        <div class="mt-4">
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6>Preparation Phase</h6>
+                                    <span class="badge bg-primary rounded-pill">8.4</span>
                                 </div>
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-times-circle text-danger me-2"></i>
-                                    <span>Shoulder Rotation Needs Improvement</span>
+                                <div class="progress">
+                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 84%" aria-valuenow="84" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="mt-2">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        <span>Excellent Grip Position</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-times-circle text-danger me-2"></i>
+                                        <span>Shoulder Rotation Needs Improvement</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h6>Improvement Suggestion</h6>
-                                <i class="far fa-lightbulb text-warning"></i>
-                            </div>
-                            <div class="alert alert-info">
-                                <p class="mb-0"><strong>Focus on your shoulder rotation during preparation.</strong> Try the following drill: Stand sideways to a wall with your racket in hand. Practice rotating your shoulders fully while maintaining your grip position.</p>
+
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6>Improvement Suggestion</h6>
+                                    <i class="far fa-lightbulb text-warning"></i>
+                                </div>
+                                <div class="alert alert-info">
+                                    <p class="mb-0"><strong>Focus on your shoulder rotation during preparation.</strong> Try the following drill: Stand sideways to a wall with your racket in hand. Practice rotating your shoulders fully while maintaining your grip position.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -188,11 +178,12 @@
 </section>
 
 <!-- Features Section -->
-<section class="mb-5">
-    <div class="text-center mb-5">
-        <h2>Key Features</h2>
-        <p class="lead">Comprehensive analysis to improve every aspect of your game</p>
-    </div>
+<section class="section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>Key Features</h2>
+            <p class="lead">Comprehensive analysis to improve every aspect of your game</p>
+        </div>
     
     <div class="row">
         <div class="col-md-4 mb-4">
@@ -279,17 +270,53 @@
             </div>
         </div>
     </div>
+    </div>
 </section>
 
 <!-- Call to Action -->
-<section class="text-center p-5 bg-primary text-white rounded mb-5">
-    <h2 class="mb-4">Ready to Improve Your Tennis Game?</h2>
-    <p class="lead mb-4">Join thousands of players who have elevated their game with TennisAI</p>
-    {% if current_user.is_authenticated %}
-    <a href="{{ url_for('match.upload_match') }}" class="btn btn-light btn-lg px-5">Start Analysis</a>
-    {% else %}
-    <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg px-5">Sign Up Now</a>
-    {% endif %}
+<section class="mb-5 py-7">
+    <div class="container">
+        <div class="row align-items-center bg-white shadow rounded p-4">
+            <div class="col-lg-4">
+                <h2 class="mb-4 text-gray-800">Ready to Improve Your Tennis Game?</h2>
+                <p class="lead mb-4">Join thousands of players who have elevated their game with TennisAI</p>
+
+                <div class="mb-4">
+                    <a href="{% if current_user.is_authenticated %}{{ url_for('match.upload_match') }}{% else %}{{ url_for('auth.register') }}{% endif %}" class="btn btn-primary btn-lg px-5">Start Analysis</a>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white me-2"
+                                 style="width: 24px; height: 24px; background-color: rgba(23, 177, 105, 0.6);">
+                                <i class="fas fa-check" style="font-size: 12px;"></i>
+                            </div>
+                            <span style="font-size: 0.85rem;">Professional-grade analysis</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white me-2"
+                                 style="width: 24px; height: 24px; background-color: rgba(23, 177, 105, 0.6);">
+                                <i class="fas fa-check" style="font-size: 12px;"></i>
+                            </div>
+                            <span style="font-size: 0.85rem;">Personalized improvement plan</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div>
+                    <img src="{{ url_for('static', filename='images/readytoimprove.jpg') }}"
+                         alt="Ready to Improve"
+                         class="img-fluid"
+                         style="width: 100%; object-fit: cover; height: 600px;">
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 <!-- Testimonials -->
@@ -298,73 +325,190 @@
         <h2>What Players Say</h2>
         <p class="lead">Hear from tennis players who improved their game with TennisAI</p>
     </div>
-    
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="d-flex mb-3">
-                        <i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-warning"></i>
-                    </div>
-                    <p class="card-text">"TennisAI helped me identify a flaw in my forehand technique that I'd been struggling with for years. After following the suggested drills, my consistency improved dramatically."</p>
-                    <div class="d-flex align-items-center mt-3">
-                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">JD</div>
-                        <div class="ms-3">
-                            <h6 class="mb-0">John D.</h6>
-                            <small class="text-muted">Club Player, 4.5 NTRP</small>
+
+    <div class="testimonial-carousel-container">
+        <div class="testimonial-carousel">
+
+            <div class="testimonial-card">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text">"TennisAI helped me identify a flaw in my forehand technique that I'd been struggling with for years. After following the suggested drills, my consistency improved dramatically."</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">JD</div>
+                            <div class="ms-3">
+                                <h6 class="mb-0">John D.</h6>
+                                <small class="text-muted">Club Player, 4.5 NTRP</small>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="d-flex mb-3">
-                        <i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-warning"></i>
-                    </div>
-                    <p class="card-text">"As a coach, I use TennisAI with all my students. Being able to share detailed analysis and see their progress over time has transformed my coaching approach."</p>
-                    <div class="d-flex align-items-center mt-3">
-                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">SM</div>
-                        <div class="ms-3">
-                            <h6 class="mb-0">Sarah M.</h6>
-                            <small class="text-muted">Tennis Coach</small>
+
+            <div class="testimonial-card">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text">"As a coach, I use TennisAI with all my students. Being able to share detailed analysis and see their progress over time has transformed my coaching approach."</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">SM</div>
+                            <div class="ms-3">
+                                <h6 class="mb-0">Sarah M.</h6>
+                                <small class="text-muted">Tennis Coach</small>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="d-flex mb-3">
-                        <i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star-half-alt text-warning"></i>
-                    </div>
-                    <p class="card-text">"I was skeptical at first, but the detailed breakdown of my serve mechanics was eye-opening. My serve speed has increased by 15mph after just two months of focused practice."</p>
-                    <div class="d-flex align-items-center mt-3">
-                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">RL</div>
-                        <div class="ms-3">
-                            <h6 class="mb-0">Robert L.</h6>
-                            <small class="text-muted">College Player</small>
+
+            <div class="testimonial-card">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star-half-alt text-warning"></i>
+                        </div>
+                        <p class="card-text">"I was skeptical at first, but the detailed breakdown of my serve mechanics was eye-opening. My serve speed has increased by 15mph after just two months of focused practice."</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">RL</div>
+                            <div class="ms-3">
+                                <h6 class="mb-0">Robert L.</h6>
+                                <small class="text-muted">College Player</small>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="testimonial-card">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text">"The AI feedback on my footwork was a game-changer. Now I understand how positioning affects my shots. My movement on court has improved dramatically."</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">AJ</div>
+                            <div class="ms-3">
+                                <h6 class="mb-0">Amanda J.</h6>
+                                <small class="text-muted">Recreational Player</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text">"TennisAI helped me identify a flaw in my forehand technique that I'd been struggling with for years. After following the suggested drills, my consistency improved dramatically."</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">JD</div>
+                            <div class="ms-3">
+                                <h6 class="mb-0">John D.</h6>
+                                <small class="text-muted">Club Player, 4.5 NTRP</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text">"As a coach, I use TennisAI with all my students. Being able to share detailed analysis and see their progress over time has transformed my coaching approach."</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">SM</div>
+                            <div class="ms-3">
+                                <h6 class="mb-0">Sarah M.</h6>
+                                <small class="text-muted">Tennis Coach</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star-half-alt text-warning"></i>
+                        </div>
+                        <p class="card-text">"I was skeptical at first, but the detailed breakdown of my serve mechanics was eye-opening. My serve speed has increased by 15mph after just two months of focused practice."</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">RL</div>
+                            <div class="ms-3">
+                                <h6 class="mb-0">Robert L.</h6>
+                                <small class="text-muted">College Player</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text">"The AI feedback on my footwork was a game-changer. Now I understand how positioning affects my shots. My movement on court has improved dramatically."</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">AJ</div>
+                            <div class="ms-3">
+                                <h6 class="mb-0">Amanda J.</h6>
+                                <small class="text-muted">Recreational Player</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
+
     </div>
+
 </section>
 {% endblock %}

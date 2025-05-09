@@ -15,20 +15,32 @@
   
   /* Typography */
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap');
-  
-  body {
-    font-family: 'Roboto', sans-serif;
-    background-color: var(--background);
-    color: var(--text);
-    line-height: 1.6;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: var(--secondary);
-  }
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: var(--secondary);
+  letter-spacing: -0.02em;
+}
+
+
+h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  position: static;
+  padding-bottom: 0;
+  margin-bottom: 0.8rem;
+}
   
   .stats-value {
     font-family: 'IBM Plex Mono', monospace;
@@ -38,19 +50,20 @@
   .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 15px;
+    padding: 0 10px;
   }
-  
-  .section {
-    margin-bottom: 2rem;
-    padding: 1.5rem;
-  }
+
+.section {
+  padding: 2rem 0;
+}
   
   /* Navigation */
-  .navbar {
-    background-color: var(--white);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
+.navbar {
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 100;
+}
   
   .navbar-brand {
     font-family: 'Inter', sans-serif;
@@ -127,31 +140,81 @@
   .card-body {
     padding: 1.5rem;
   }
-  
-  /* Hero Section */
-  .hero-section {
-    background-color: var(--white);
-    padding: 5rem 0;
-    position: relative;
+
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+
+}
+
+.hero-bg-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 1;
+  animation: zoom-in 15s infinite alternate;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0) 50%);
+}
+@keyframes zoom-in {
+  from {
+    transform: scale(1);
   }
-  
-  .hero-content {
-    max-width: 600px;
+  to {
+    transform: scale(1.1);
   }
-  
-  .hero-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    color: var(--secondary);
-  }
-  
-  .hero-subtitle {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    color: var(--text);
-  }
-  
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  padding: 2rem;
+  max-width: 800px;
+  padding-top: 120px; /* Add padding to account for navbar */
+}
+
+/* Letter animation style */
+.hero-title .letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.1s ease, transform 0.3s ease;
+}
+
+
+.hero-title .letter.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.hero-title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
   /* Features Section */
   .feature-card {
     text-align: center;
@@ -215,7 +278,19 @@
   .stat-value.negative {
     color: var(--accent);
   }
-  
+.list-group-item .rounded-circle {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  flex: 0 0 30px !important;
+  border-radius: 50% !important;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary) !important;
+}
   /* Progress indicators */
   .progress {
     height: 0.5rem;
@@ -359,14 +434,114 @@
     font-size: 0.9rem;
     color: var(--text);
   }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .hero-title {
-      font-size: 2rem;
+
+/* 滚动容器样式 */
+.testimonial-carousel-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 20px 0;
+}
+
+/* 滚动内容区域 */
+.testimonial-carousel {
+  display: flex;
+  animation: scroll 60s linear infinite; /* 控制滚动速度 */
+  width: fit-content; /* 确保容纳所有卡片 */
+}
+
+/* 暂停滚动，当用户悬停时 */
+.testimonial-carousel:hover {
+  animation-play-state: paused;
+}
+
+/* 单个评论卡片样式 */
+.testimonial-card {
+  flex: 0 0 auto;
+  width: 350px; /* 固定宽度 */
+  padding: 0 15px;
+  transition: transform 0.3s;
+}
+
+/* 卡片悬停效果 */
+.testimonial-card:hover {
+  transform: translateY(-5px);
+}
+
+/* 滚动动画 */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-350px * 4)); /* 滚动到第4张卡片的位置，实现循环 */
+  }
+}
+
+/* 根据屏幕尺寸调整卡片大小 */
+@media (max-width: 992px) {
+  .testimonial-card {
+    width: 300px;
+  }
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
     }
-    
-    .dashboard-summary {
+    100% {
+      transform: translateX(calc(-300px * 4));
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .testimonial-card {
+    width: 280px;
+  }
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(calc(-280px * 4));
+    }
+  }
+}
+
+/* 添加渐变遮罩，使滚动效果更平滑 */
+.testimonial-carousel-container::before,
+.testimonial-carousel-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50px;
+  z-index: 2;
+}
+
+.testimonial-carousel-container::before {
+  left: 0;
+  background: linear-gradient(to right, var(--background) 0%, transparent 100%);
+}
+
+.testimonial-carousel-container::after {
+  right: 0;
+  background: linear-gradient(to left, var(--background) 0%, transparent 100%);
+}
+
+
+  /* Responsive adjustments */
+@media (max-width: 992px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .dashboard-summary {
       grid-template-columns: repeat(2, 1fr);
     }
     
