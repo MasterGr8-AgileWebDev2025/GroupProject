@@ -246,3 +246,39 @@ document.addEventListener('DOMContentLoaded', function() {
         }, index * letterDelay);
     });
 });
+
+/**
+ * Fade-in Animation
+ *
+ * This script handles fade-in animations for elements as they enter the viewport.
+ * All elements will fade in from bottom to top with a slight upward movement.
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all elements with fade-in animations
+    const fadeElements = document.querySelectorAll('.fade-in, .fade-in-card');
+
+    // If no elements found, exit
+    if (fadeElements.length === 0) return;
+
+    // Check if element is in viewport and should be animated
+    function checkFadeElements() {
+        const triggerBottom = window.innerHeight * 0.85;
+
+        fadeElements.forEach(element => {
+            const elementTop = element.getBoundingClientRect().top;
+
+            if (elementTop < triggerBottom) {
+                element.classList.add('visible');
+            }
+        });
+    }
+
+    // Listen for scroll events
+    window.addEventListener('scroll', checkFadeElements);
+
+    // Check on initial load
+    checkFadeElements();
+
+    // Also check after a short delay
+    setTimeout(checkFadeElements, 300);
+});
