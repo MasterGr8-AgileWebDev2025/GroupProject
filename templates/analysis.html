@@ -710,13 +710,230 @@ document.addEventListener('DOMContentLoaded', function() {
     const analyzeBtn = document.getElementById('analyzeBtn');
     const analysisContent = document.getElementById('aiAnalysisContent');
     
-    analyzeBtn.addEventListener('click', async function() {
-        // 显示加载状态
-        analyzeBtn.disabled = true;
-        analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Analyzing...';
-        analysisContent.innerHTML = '<div class="text-center"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Analyzing your match data...</p></div>';
+    // 添加加载动画样式
+    const loadingHTML = `
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <h5 class="text-primary">Analyzing Your Match Data</h5>
+            <p class="text-muted">This may take a few moments...</p>
+        </div>
+    `;
+
+    // 添加错误提示样式
+    const errorHTML = (message) => `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <strong>Error:</strong> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+
+    // 格式化分析结果
+    function formatAnalysis(analysis) {
+        const sections = analysis.split('\n\n');
+        let html = '';
         
+        sections.forEach(section => {
+            if (section.trim()) {
+                const sectionType = section.split('\n')[0].trim();
+                const content = section.replace(sectionType, '').trim();
+                
+                switch(sectionType) {
+                    case '[MATCH_SUMMARY]':
+                        html += createSectionCard('Match Summary', 'chart-line', 'primary', content, 'lead');
+                        break;
+                    case '[KEY_AREAS]':
+                        html += createSectionCard('Key Areas for Improvement', 'bullseye', 'warning', formatKeyAreas(content));
+                        break;
+                    case '[PRACTICE_DRILLS]':
+                        html += createSectionCard('Practice Drills', 'dumbbell', 'success', formatPracticeDrills(content));
+                        break;
+                    case '[TECHNICAL_TIPS]':
+                        html += createSectionCard('Technical Tips', 'lightbulb', 'info', formatTechnicalTips(content));
+                        break;
+                    case '[WEEKLY_PLAN]':
+                        html += createSectionCard('Weekly Practice Plan', 'calendar-alt', 'secondary', formatWeeklyPlan(content));
+                        break;
+                }
+            }
+        });
+        
+        return html;
+    }
+
+    // 创建卡片容器
+    function createSectionCard(title, icon, color, content, contentClass = '') {
+        return `
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-${color} text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-${icon} me-2"></i>${title}
+                    </h5>
+                </div>
+                <div class="card-body ${contentClass}">
+                    ${content}
+                </div>
+            </div>
+        `;
+    }
+
+    // 格式化关键区域
+    function formatKeyAreas(content) {
+        const areas = content.split('\n\n');
+        let html = '<div class="row g-3">';
+        
+        areas.forEach(area => {
+            if (area.trim()) {
+                const lines = area.split('\n');
+                const title = lines[0].replace(/^\d+\.\s*/, '');
+                const performance = lines[1]?.replace('- Current Performance:', '').trim();
+                const impact = lines[2]?.replace('- Impact:', '').trim();
+                const priority = lines[3]?.replace('- Priority:', '').trim();
+                
+                html += `
+                    <div class="col-md-6">
+                        <div class="card h-100 border-${getPriorityColor(priority)}">
+                            <div class="card-body">
+                                <h6 class="card-title d-flex justify-content-between align-items-center">
+                                    ${title}
+                                    <span class="badge bg-${getPriorityColor(priority)}">${priority}</span>
+                                </h6>
+                                <div class="card-text">
+                                    <p class="mb-2"><strong>Current Performance:</strong> ${performance}</p>
+                                    <p class="mb-0"><strong>Impact:</strong> ${impact}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            }
+        });
+        
+        html += '</div>';
+        return html;
+    }
+
+    // 格式化练习建议
+    function formatPracticeDrills(content) {
+        const drills = content.split('\n\n');
+        let html = '<div class="row g-3">';
+        
+        drills.forEach(drill => {
+            if (drill.trim()) {
+                const lines = drill.split('\n');
+                const title = lines[0].replace(/^\d+\.\s*/, '');
+                const purpose = lines[1]?.replace('- Purpose:', '').trim();
+                const steps = lines[2]?.replace('- Steps:', '').trim();
+                const duration = lines[3]?.replace('- Duration:', '').trim();
+                
+                html += `
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6 class="card-title">${title}</h6>
+                                <div class="card-text">
+                                    <p class="mb-2"><strong>Purpose:</strong> ${purpose}</p>
+                                    <p class="mb-2"><strong>Steps:</strong></p>
+                                    <ol class="mb-2">
+                                        ${steps.split(',').map(step => `<li>${step.trim()}</li>`).join('')}
+                                    </ol>
+                                    <p class="mb-0"><strong>Duration:</strong> ${duration}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            }
+        });
+        
+        html += '</div>';
+        return html;
+    }
+
+    // 格式化技术提示
+    function formatTechnicalTips(content) {
+        const tips = content.split('\n\n');
+        let html = '<div class="row g-3">';
+        
+        tips.forEach(tip => {
+            if (tip.trim()) {
+                const lines = tip.split('\n');
+                const category = lines[0].replace(/^\d+\.\s*/, '');
+                const specificTip = lines[1]?.replace('- Specific Tip:', '').trim();
+                const implementation = lines[2]?.replace('- Implementation:', '').trim();
+                const outcome = lines[3]?.replace('- Expected Outcome:', '').trim();
+                
+                html += `
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6 class="card-title">${category}</h6>
+                                <div class="card-text">
+                                    <p class="mb-2">${specificTip}</p>
+                                    <p class="mb-2"><strong>Implementation:</strong> ${implementation}</p>
+                                    <p class="mb-0"><strong>Expected Outcome:</strong> ${outcome}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            }
+        });
+        
+        html += '</div>';
+        return html;
+    }
+
+    // 格式化每周计划
+    function formatWeeklyPlan(content) {
+        const days = content.split('\n\n');
+        let html = '<div class="row g-3">';
+        
+        days.forEach(day => {
+            if (day.trim()) {
+                const lines = day.split('\n');
+                const dayTitle = lines[0];
+                const activities = lines.slice(1).join('<br>');
+                
+                html += `
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h6 class="mb-0">${dayTitle}</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">${activities}</p>
+                            </div>
+                        </div>
+                    </div>`;
+            }
+        });
+        
+        html += '</div>';
+        return html;
+    }
+
+    // 获取优先级颜色
+    function getPriorityColor(priority) {
+        switch(priority?.toLowerCase()) {
+            case 'high':
+                return 'danger';
+            case 'medium':
+                return 'warning';
+            case 'low':
+                return 'success';
+            default:
+                return 'secondary';
+        }
+    }
+
+    // 处理分析按钮点击事件
+    analyzeBtn.addEventListener('click', async function() {
         try {
+            // 显示加载状态
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Analyzing...';
+            analysisContent.innerHTML = loadingHTML;
+            
             // 发送分析请求
             const response = await fetch(`/match/{{ match.id }}/analyze`, {
                 method: 'POST',
@@ -735,40 +952,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(data.error || 'Analysis failed');
             }
         } catch (error) {
-            analysisContent.innerHTML = `
-                <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-circle me-2"></i>
-                    Error: ${error.message}
-                </div>
-            `;
+            analysisContent.innerHTML = errorHTML(error.message);
         } finally {
             // 恢复按钮状态
             analyzeBtn.disabled = false;
             analyzeBtn.innerHTML = '<i class="fas fa-sync-alt me-1"></i>Get AI Analysis';
         }
     });
-    
-    function formatAnalysis(analysis) {
-        // 将 AI 返回的文本转换为格式化的 HTML
-        const sections = analysis.split('\n\n');
-        let html = '';
-        
-        sections.forEach(section => {
-            if (section.trim()) {
-                if (section.startsWith('1.')) {
-                    html += `<h5 class="mt-4"><i class="fas fa-bullseye me-2"></i>Key Areas for Improvement</h5>`;
-                } else if (section.startsWith('2.')) {
-                    html += `<h5 class="mt-4"><i class="fas fa-dumbbell me-2"></i>Practice Drills</h5>`;
-                } else if (section.startsWith('3.')) {
-                    html += `<h5 class="mt-4"><i class="fas fa-lightbulb me-2"></i>Technical Tips</h5>`;
-                }
-                
-                html += `<div class="alert alert-info">${section.replace(/\n/g, '<br>')}</div>`;
-            }
-        });
-        
-        return html;
-    }
 });
 </script>
 {% endblock %}
