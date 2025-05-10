@@ -14,6 +14,15 @@ from forms import MatchUploadForm, ExcelUploadForm
 from helpers import process_match_data, process_excel_data
 from utils import calculate_overall_score, generate_match_analysis
 from routes.utils import check_match_access, get_template_date
+import google.generativeai as genai
+from flask import jsonify
+import os
+from datetime import datetime
+
+# 配置 Gemini API
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')  # 从环境变量获取 API 密钥
+genai.configure(api_key=GEMINI_API_KEY)
+
 
 # Create blueprint
 match_bp = Blueprint('match', __name__)
@@ -204,3 +213,74 @@ def download_report(match_id):
         download_name=filename,
         as_attachment=True
     )
+
+
+
+# 在 match_bp 中添加新的路由
+@match_bp.route('/match/<int:match_id>/analyze', methods=['POST'])
+@login_required
+def analyze_match(match_id):
+    """AI analysis route for match"""
+    # 检查访问权限
+    match = check_match_access(match_id)
+    
+    # 获取统计数据
+    statistics = {}
+    for stat in match.statistics.all():
+        statistics[stat.statistic_type] = stat.get_data()
+    
+    try:
+        # 初始化 Gemini 模型
+        model = genai.GenerativeModel('gemini-2.0-flash')
+        
+        # 构建提示词
+        prompt = f"""
+        As a professional tennis coach, analyze these match statistics and provide specific improvement recommendations.
+        Focus on the most important areas that need improvement.
+
+        Match Information:
+        - Date: {match.date}
+        - Opponent: {match.opponent}
+        - Location: {match.location}
+        - Result: {match.match_result}
+
+        Key Statistics:
+        1. Serve Performance:
+           - First Serve %: {statistics.get('basic_stats', {}).get('first_serve_percentage')}%
+           - Aces: {statistics.get('basic_stats', {}).get('aces')}
+           - Double Faults: {statistics.get('basic_stats', {}).get('double_faults')}
+
+        2. Shot Analysis:
+           - Forehand Winners/Errors: {statistics.get('shot_analysis', {}).get('forehand', {}).get('winners')}/{statistics.get('shot_analysis', {}).get('forehand', {}).get('errors')}
+           - Backhand Winners/Errors: {statistics.get('shot_analysis', {}).get('backhand', {}).get('winners')}/{statistics.get('shot_analysis', {}).get('backhand', {}).get('errors')}
+
+        3. Movement:
+           - Distance Covered: {statistics.get('player_movement', {}).get('distance_covered')}m
+           - Direction Changes: {statistics.get('player_movement', {}).get('direction_changes')}
+
+        Please provide:
+        1. Key areas needing improvement (based on statistics)
+        2. Specific practice drills for each area
+        3. Technical tips for improvement
+
+        Format the response in a clear, structured way with numbered points.
+        Keep the recommendations practical and actionable.
+        """
+        
+        # 获取 AI 分析
+        response = model.generate_content(prompt)
+        
+        # 返回分析结果
+        return jsonify({
+            "success": True,
+            "analysis": response.text,
+            "timestamp": datetime.utcnow().isoformat()
+        })
+        
+    except Exception as e:
+        # 记录错误
+        print(f"AI Analysis Error: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": "Failed to generate analysis. Please try again later."
+        }), 500
