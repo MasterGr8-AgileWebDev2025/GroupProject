@@ -684,98 +684,18 @@
     
     <!-- AI Recommendation -->
     <div class="card mt-4 mb-5">
-        <div class="card-header bg-primary text-white">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="fas fa-robot me-2"></i>AI Improvement Recommendation</h5>
+            <button id="analyzeBtn" class="btn btn-light btn-sm">
+                <i class="fas fa-sync-alt me-1"></i>Get AI Analysis
+            </button>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-8">
-                    <h5>Focus Areas for Improvement</h5>
-                    
-                    {% if statistics.game_phases.preparation.shoulder_rotation == 'Needs Improvement' %}
-                    <div class="alert alert-warning">
-                        <h6><i class="fas fa-exclamation-triangle me-2"></i>Shoulder Rotation</h6>
-                        <p>Your shoulder rotation during preparation needs improvement. This affects your power generation and shot consistency.</p>
-                        <h6 class="mt-3">Recommended Practice:</h6>
-                        <ul>
-                            <li>Shadow swings with focus on complete shoulder turn</li>
-                            <li>Wall practice with exaggerated shoulder rotation</li>
-                            <li>Partner feeding drill with focus solely on preparation phase</li>
-                        </ul>
-                    </div>
-                    {% endif %}
-                    
-                    {% if statistics.shot_analysis.backhand.errors > statistics.shot_analysis.backhand.winners %}
-                    <div class="alert alert-warning">
-                        <h6><i class="fas fa-exclamation-triangle me-2"></i>Backhand Consistency</h6>
-                        <p>Your backhand is producing more errors than winners. Focus on improving consistency before adding power.</p>
-                        <h6 class="mt-3">Recommended Practice:</h6>
-                        <ul>
-                            <li>Cross-court backhand rally drill with emphasis on consistency</li>
-                            <li>Backhand depth control exercise with targets</li>
-                            <li>Slow-paced backhand exchange focusing on technique</li>
-                        </ul>
-                    </div>
-                    {% endif %}
-                    
-                    {% if statistics.basic_stats.first_serve_percentage < 60 %}
-                    <div class="alert alert-warning">
-                        <h6><i class="fas fa-exclamation-triangle me-2"></i>First Serve Percentage</h6>
-                        <p>Your first serve percentage is below optimal level. Improving this will give you more control of points.</p>
-                        <h6 class="mt-3">Recommended Practice:</h6>
-                        <ul>
-                            <li>Serve placement drill with accuracy targets</li>
-                            <li>Reduced-power serve practice focusing on consistency</li>
-                            <li>Service motion review and technical adjustment</li>
-                        </ul>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="col-md-4">
-                    <div class="card bg-light">
-                        <div class="card-body">
-                            <h5 class="card-title">Overall Assessment</h5>
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="progress flex-grow-1 me-3" style="height: 10px;">
-                                    {% set avg_score = (statistics.game_phases.preparation.score + statistics.game_phases.backswing.score + statistics.game_phases.contact.score + statistics.game_phases.follow_through.score) / 4 %}
-                                    <div class="progress-bar {% if avg_score >= 80 %}bg-success{% elif avg_score >= 60 %}bg-warning{% else %}bg-danger{% endif %}" 
-                                        role="progressbar" 
-                                        style="width: {{ avg_score }}%" 
-                                        aria-valuenow="{{ avg_score }}" 
-                                        aria-valuemin="0" 
-                                        aria-valuemax="100">
-                                    </div>
-                                </div>
-                                <div class="fs-4 {% if avg_score >= 80 %}text-success{% elif avg_score >= 60 %}text-warning{% else %}text-danger{% endif %}">
-                                    {{ avg_score|round(1) }}
-                                </div>
-                            </div>
-                            <p>
-                                {% if avg_score >= 80 %}
-                                Your technique is well-developed. Focus on refining specific areas for competitive advantage.
-                                {% elif avg_score >= 60 %}
-                                Your fundamentals are solid. Targeted practice will help you reach the next level.
-                                {% else %}
-                                You have room for improvement in fundamentals. Consider working with a coach on technique.
-                                {% endif %}
-                            </p>
-                            <div class="mt-4">
-                                <h6>Strengths:</h6>
-                                <ul class="mb-3">
-                                    {% if statistics.game_phases.preparation.grip_rating == 'Excellent' %}
-                                    <li>Excellent grip position</li>
-                                    {% endif %}
-                                    {% if statistics.game_phases.follow_through.completion == 'Excellent' %}
-                                    <li>Complete follow through</li>
-                                    {% endif %}
-                                    {% if statistics.shot_analysis.forehand.winners > statistics.shot_analysis.forehand.errors %}
-                                    <li>Effective forehand</li>
-                                    {% endif %}
-                                </ul>
-                                <a href="#" class="btn btn-primary w-100">Download Full Report</a>
-                            </div>
-                        </div>
-                    </div>
+            <div id="aiAnalysisContent">
+                <!-- 分析结果将在这里显示 -->
+                <div class="text-center text-muted">
+                    <i class="fas fa-robot fa-2x mb-3"></i>
+                    <p>Click the "Get AI Analysis" button to receive personalized improvement recommendations.</p>
                 </div>
             </div>
         </div>
@@ -784,6 +704,263 @@
 {% endblock %}
 
 {% block scripts %}
-<!-- Analysis page specific scripts -->
+{{ super() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const analysisContent = document.getElementById('aiAnalysisContent');
+    
+    // 添加加载动画样式
+    const loadingHTML = `
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <h5 class="text-primary">Analyzing Your Match Data</h5>
+            <p class="text-muted">This may take a few moments...</p>
+        </div>
+    `;
+
+    // 添加错误提示样式
+    const errorHTML = (message) => `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <strong>Error:</strong> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+
+    // 格式化分析结果
+    function formatAnalysis(analysis) {
+        const sections = analysis.split('\n\n');
+        let html = '';
+        
+        sections.forEach(section => {
+            if (section.trim()) {
+                const sectionType = section.split('\n')[0].trim();
+                const content = section.replace(sectionType, '').trim();
+                
+                switch(sectionType) {
+                    case '[MATCH_SUMMARY]':
+                        html += createSectionCard('Match Summary', 'chart-line', 'primary', content, 'lead');
+                        break;
+                    case '[KEY_AREAS]':
+                        html += createSectionCard('Key Areas for Improvement', 'bullseye', 'warning', formatKeyAreas(content));
+                        break;
+                    case '[PRACTICE_DRILLS]':
+                        html += createSectionCard('Practice Drills', 'dumbbell', 'success', formatPracticeDrills(content));
+                        break;
+                    case '[TECHNICAL_TIPS]':
+                        html += createSectionCard('Technical Tips', 'lightbulb', 'info', formatTechnicalTips(content));
+                        break;
+                    case '[WEEKLY_PLAN]':
+                        html += createSectionCard('Weekly Practice Plan', 'calendar-alt', 'secondary', formatWeeklyPlan(content));
+                        break;
+                }
+            }
+        });
+        
+        return html;
+    }
+
+    // 创建卡片容器
+    function createSectionCard(title, icon, color, content, contentClass = '') {
+        return `
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-${color} text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-${icon} me-2"></i>${title}
+                    </h5>
+                </div>
+                <div class="card-body ${contentClass}">
+                    ${content}
+                </div>
+            </div>
+        `;
+    }
+
+    // 格式化关键区域
+    function formatKeyAreas(content) {
+        const areas = content.split('\n\n');
+        let html = '<div class="row g-3">';
+        
+        areas.forEach(area => {
+            if (area.trim()) {
+                const lines = area.split('\n');
+                const title = lines[0].replace(/^\d+\.\s*/, '');
+                const performance = lines[1]?.replace('- Current Performance:', '').trim();
+                const impact = lines[2]?.replace('- Impact:', '').trim();
+                const priority = lines[3]?.replace('- Priority:', '').trim();
+                
+                html += `
+                    <div class="col-md-6">
+                        <div class="card h-100 border-${getPriorityColor(priority)}">
+                            <div class="card-body">
+                                <h6 class="card-title d-flex justify-content-between align-items-center">
+                                    ${title}
+                                    <span class="badge bg-${getPriorityColor(priority)}">${priority}</span>
+                                </h6>
+                                <div class="card-text">
+                                    <p class="mb-2"><strong>Current Performance:</strong> ${performance}</p>
+                                    <p class="mb-0"><strong>Impact:</strong> ${impact}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            }
+        });
+        
+        html += '</div>';
+        return html;
+    }
+
+    // 格式化练习建议
+    function formatPracticeDrills(content) {
+        const drills = content.split('\n\n');
+        let html = '<div class="row g-3">';
+        
+        drills.forEach(drill => {
+            if (drill.trim()) {
+                const lines = drill.split('\n');
+                const title = lines[0].replace(/^\d+\.\s*/, '');
+                const purpose = lines[1]?.replace('- Purpose:', '').trim();
+                const steps = lines[2]?.replace('- Steps:', '').trim();
+                const duration = lines[3]?.replace('- Duration:', '').trim();
+                
+                html += `
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6 class="card-title">${title}</h6>
+                                <div class="card-text">
+                                    <p class="mb-2"><strong>Purpose:</strong> ${purpose}</p>
+                                    <p class="mb-2"><strong>Steps:</strong></p>
+                                    <ol class="mb-2">
+                                        ${steps.split(',').map(step => `<li>${step.trim()}</li>`).join('')}
+                                    </ol>
+                                    <p class="mb-0"><strong>Duration:</strong> ${duration}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            }
+        });
+        
+        html += '</div>';
+        return html;
+    }
+
+    // 格式化技术提示
+    function formatTechnicalTips(content) {
+        const tips = content.split('\n\n');
+        let html = '<div class="row g-3">';
+        
+        tips.forEach(tip => {
+            if (tip.trim()) {
+                const lines = tip.split('\n');
+                const category = lines[0].replace(/^\d+\.\s*/, '');
+                const specificTip = lines[1]?.replace('- Specific Tip:', '').trim();
+                const implementation = lines[2]?.replace('- Implementation:', '').trim();
+                const outcome = lines[3]?.replace('- Expected Outcome:', '').trim();
+                
+                html += `
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6 class="card-title">${category}</h6>
+                                <div class="card-text">
+                                    <p class="mb-2">${specificTip}</p>
+                                    <p class="mb-2"><strong>Implementation:</strong> ${implementation}</p>
+                                    <p class="mb-0"><strong>Expected Outcome:</strong> ${outcome}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            }
+        });
+        
+        html += '</div>';
+        return html;
+    }
+
+    // 格式化每周计划
+    function formatWeeklyPlan(content) {
+        const days = content.split('\n\n');
+        let html = '<div class="row g-3">';
+        
+        days.forEach(day => {
+            if (day.trim()) {
+                const lines = day.split('\n');
+                const dayTitle = lines[0];
+                const activities = lines.slice(1).join('<br>');
+                
+                html += `
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h6 class="mb-0">${dayTitle}</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">${activities}</p>
+                            </div>
+                        </div>
+                    </div>`;
+            }
+        });
+        
+        html += '</div>';
+        return html;
+    }
+
+    // 获取优先级颜色
+    function getPriorityColor(priority) {
+        switch(priority?.toLowerCase()) {
+            case 'high':
+                return 'danger';
+            case 'medium':
+                return 'warning';
+            case 'low':
+                return 'success';
+            default:
+                return 'secondary';
+        }
+    }
+
+    // 处理分析按钮点击事件
+    analyzeBtn.addEventListener('click', async function() {
+        try {
+            // 显示加载状态
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Analyzing...';
+            analysisContent.innerHTML = loadingHTML;
+            
+            // 发送分析请求
+            const response = await fetch(`/match/{{ match.id }}/analyze`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // 格式化并显示分析结果
+                const formattedAnalysis = formatAnalysis(data.analysis);
+                analysisContent.innerHTML = formattedAnalysis;
+            } else {
+                throw new Error(data.error || 'Analysis failed');
+            }
+        } catch (error) {
+            analysisContent.innerHTML = errorHTML(error.message);
+        } finally {
+            // 恢复按钮状态
+            analyzeBtn.disabled = false;
+            analyzeBtn.innerHTML = '<i class="fas fa-sync-alt me-1"></i>Get AI Analysis';
+        }
+    });
+});
+</script>
+
 <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
 {% endblock %}
