@@ -692,7 +692,7 @@
         </div>
         <div class="card-body">
             <div id="aiAnalysisContent">
-                <!-- 分析结果将在这里显示 -->
+                <!-- Analysis will show up here -->
                 <div class="text-center text-muted">
                     <i class="fas fa-robot fa-2x mb-3"></i>
                     <p>Click the "Get AI Analysis" button to receive personalized improvement recommendations.</p>
@@ -710,7 +710,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const analyzeBtn = document.getElementById('analyzeBtn');
     const analysisContent = document.getElementById('aiAnalysisContent');
     
-    // 添加加载动画样式
+    // Load animation
     const loadingHTML = `
         <div class="text-center py-5">
             <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
@@ -721,7 +721,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     `;
 
-    // 添加错误提示样式
+    // Show error message 
     const errorHTML = (message) => `
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="fas fa-exclamation-circle me-2"></i>
@@ -730,7 +730,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     `;
 
-    // 格式化分析结果
+    // Structure analysis content
     function formatAnalysis(analysis) {
         const sections = analysis.split('\n\n');
         let html = '';
@@ -763,7 +763,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return html;
     }
 
-    // 创建卡片容器
+    // Create section card
     function createSectionCard(title, icon, color, content, contentClass = '') {
         return `
             <div class="card mb-4 shadow-sm">
@@ -779,7 +779,6 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
     }
 
-    // 格式化关键区域
     function formatKeyAreas(content) {
         const areas = content.split('\n\n');
         let html = '<div class="row g-3">';
@@ -814,7 +813,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return html;
     }
 
-    // 格式化练习建议
+    // Format the drills
     function formatPracticeDrills(content) {
         const drills = content.split('\n\n');
         let html = '<div class="row g-3">';
@@ -850,7 +849,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return html;
     }
 
-    // 格式化技术提示
+    // Format the tip display
     function formatTechnicalTips(content) {
         const tips = content.split('\n\n');
         let html = '<div class="row g-3">';
@@ -883,7 +882,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return html;
     }
 
-    // 格式化每周计划
     function formatWeeklyPlan(content) {
         const days = content.split('\n\n');
         let html = '<div class="row g-3">';
@@ -912,7 +910,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return html;
     }
 
-    // 获取优先级颜色
     function getPriorityColor(priority) {
         switch(priority?.toLowerCase()) {
             case 'high':
@@ -926,15 +923,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 处理分析按钮点击事件
+    // 
     analyzeBtn.addEventListener('click', async function() {
         try {
-            // 显示加载状态
+            // Display the loading animation
             analyzeBtn.disabled = true;
             analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Analyzing...';
             analysisContent.innerHTML = loadingHTML;
             
-            // 发送分析请求
+            // send POST request to the server
             const response = await fetch(`/match/{{ match.id }}/analyze`, {
                 method: 'POST',
                 headers: {
@@ -945,7 +942,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
             
             if (data.success) {
-                // 格式化并显示分析结果
+                // Display formatted analysis
                 const formattedAnalysis = formatAnalysis(data.analysis);
                 analysisContent.innerHTML = formattedAnalysis;
             } else {
@@ -954,7 +951,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             analysisContent.innerHTML = errorHTML(error.message);
         } finally {
-            // 恢复按钮状态
+            // Restore the button state
             analyzeBtn.disabled = false;
             analyzeBtn.innerHTML = '<i class="fas fa-sync-alt me-1"></i>Get AI Analysis';
         }
