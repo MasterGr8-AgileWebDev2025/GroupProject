@@ -30,6 +30,7 @@ def setup():
         return driver
 
 def teardown(driver):
+    time.sleep(waitingTime)
     driver.quit()
     print("Browser closed.")
 
@@ -57,7 +58,6 @@ def test_signup_button():
         )
         assert form_register.is_displayed(), "Registration form is not present on the page"
         print(f"Registration form is present on page {driver.current_url}.")
-        time.sleep(waitingTime)
 
     except Exception as e:
         print(f"TEST FAILED: {str(e)}")
@@ -81,7 +81,6 @@ def test_login_button():
 
         button_login.click()
         assert driver.current_url.split('/')[-1] == "login", "Clicking on login button does not open login page."
-        time.sleep(waitingTime)
 
     except Exception as e:
         print(f"TEST FAILED: {str(e)}")
@@ -89,6 +88,33 @@ def test_login_button():
     finally:
         teardown(driver)
 
+def test_explanation_display():
+    try:
+        driver = setup()
+        driver.implicitly_wait(waitingTime)
+        
+        # Check if upload, analyze and improve exist in the page
+        upload = driver.find_element(By.XPATH, '//h3[contains(text(), "1. Upload")]')
+        analyse = driver.find_element(By.XPATH, '//h3[contains(text(), "2. Analyze")]')
+        improve = driver.find_element(By.XPATH, '//h3[contains(text(), "3. Improve")]')
+
+        assert upload.is_displayed(), "Upload is not present on the page"
+        print("Upload is present on the page")
+
+        assert analyse.is_displayed(), "Analyze is not present on the page"
+        print("Analyze is present on the page")
+        
+        assert improve.is_displayed(), "Improve is not present on the page"
+        print("Improve is present on the page")
+
+    except Exception as e:
+        print(f"Test fails because: {str(e)}")
+    
+    finally:
+        teardown(driver)
+
+
 if __name__ == "__main__":
     test_signup_button()
     test_login_button()
+    test_explanation_display()
