@@ -1,0 +1,75 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Tennis Analytics Platform Guide
+
+## Project Structure
+
+The main components of the tennis analytics platform are:
+
+### Routes
+- [match_routes.py](mdc:routes/match_routes.py) - Handles all match-related routes including analysis and AI recommendations
+- Key routes:
+  - `/match/<id>/analyze` - AI analysis endpoint
+  - `/match/<id>/report` - Match report generation
+  - `/analysis/<id>` - Match analysis view
+
+### Templates
+- [analysis.html](mdc:templates/analysis.html) - Main analysis template with:
+  - Match statistics visualization
+  - AI recommendations display
+  - Interactive charts and graphs
+  - Performance metrics
+
+### Key Features
+
+#### AI Analysis System
+The AI analysis system uses Gemini API to provide personalized tennis improvement recommendations. The system:
+1. Collects match statistics
+2. Processes data through Gemini API
+3. Generates structured recommendations
+4. Displays results in a user-friendly format
+
+#### Data Visualization
+The platform includes several visualization components:
+- Performance radar charts
+- Shot distribution analysis
+- Movement tracking
+- Game phase analysis
+
+#### Technical Components
+- Uses Flask for backend routing
+- Bootstrap for frontend styling
+- Chart.js for data visualization
+- Gemini API for AI analysis
+
+## Code Organization
+
+### Frontend Structure
+- Main analysis view in `analysis.html`
+- Chart initialization in `charts.js`
+- Responsive design using Bootstrap grid system
+
+### Backend Structure
+- Route handlers in `match_routes.py`
+- Data processing and AI integration
+- Error handling and response formatting
+
+## Best Practices
+
+1. When modifying the AI analysis:
+   - Keep the prompt structure consistent
+   - Maintain clear section markers
+   - Ensure proper error handling
+
+2. When updating the frontend:
+   - Follow Bootstrap grid system
+   - Maintain responsive design
+   - Use consistent card styling
+
+3. When adding new features:
+   - Follow existing code structure
+   - Maintain error handling patterns
+   - Update documentation accordingly
