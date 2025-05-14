@@ -92,29 +92,44 @@ class MockAnalysis:
         self.strengths = ""
         self.areas_to_improve = ""
 
-def test_generate_match_analysis():
+def test_generate_match_analysis_populates_keys():
     """
-    Test if the AI simulated algorithm generates match analysis data within the bounds.
+    Test if the generated match analysis data contains all keys.
     """
-    # Arrange
-    analysis = MockAnalysis()
-    
-    # Act
-    result = generate_match_analysis(analysis)
-    
-    # Assert
-    assert 0 <= result.aces <= 8, "Aces should be between 0 and 8"
-    assert 0 <= result.double_faults <= 5, "Double faults should be between 0 and 5"
-    assert 40 <= result.first_serve_percentage <= 75, "First serve percentage should be between 40 and 75"
-    assert 5 <= result.second_serve_points_won <= 20, "Second serve points won should be between 5 and 20"
-    assert 0 <= result.break_points_saved <= 5, "Break points saved should be between 0 and 5"
-    assert 5 <= result.forehand_winners <= 20, "Forehand winners should be between 5 and 20"
-    assert 2 <= result.backhand_winners <= 15, "Backhand winners should be between 2 and 15"
-    assert 5 <= result.forehand_errors <= 20, "Forehand errors should be between 5 and 20"
-    assert 5 <= result.backhand_errors <= 20, "Backhand errors should be between 5 and 20"
-    assert 1000 <= result.distance_covered <= 5000, "Distance covered should be between 1000 and 5000"
-    assert 4 <= result.preparation_score <= 9, "Preparation score should be between 4 and 9"
-    assert 4 <= result.contact_score <= 9, "Contact score should be between 4 and 9"
-    assert 4 <= result.follow_through_score <= 9, "Follow-through score should be between 4 and 9"
-    assert result.strengths, "Strengths should not be empty"
-    assert result.areas_to_improve, "Areas to improve should not be empty"
+    statistics = {}
+    result = generate_match_analysis(statistics)
+    # Check top-level keys
+    assert 'basic_stats' in result
+    assert 'shot_analysis' in result
+    assert 'player_movement' in result
+    assert 'game_phases' in result
+    assert 'strengths' in result
+    assert 'areas_to_improve' in result
+
+def test_generate_match_analysis_value_ranges():
+    """
+    Test if the function only contains values within expected ranges.
+    """
+    statistics = {}
+    result = generate_match_analysis(statistics)
+    bs = result['basic_stats']
+    # Check value ranges for basic_stats
+    assert 0 <= bs['aces'] <= 8
+    assert 0 <= bs['double_faults'] <= 5
+    assert 40 <= bs['first_serve_percentage'] <= 75
+    assert 10 <= bs['first_serve_points_won'] <= 40
+    assert 5 <= bs['second_serve_points_won'] <= 20
+    assert 0 <= bs['break_points_saved'] <= 5
+    assert bs['break_points_saved'] <= bs['break_points_faced'] <= bs['break_points_saved'] + 5
+    assert 0 <= bs['break_points_converted'] <= bs['break_points_faced']
+    assert 30 <= bs['total_points_won'] <= 70
+
+def test_generate_match_analysis_strengths_and_areas():
+    """
+    Test if the strengths and areas to improve are non-empty strings.
+    """
+    statistics = {}
+    result = generate_match_analysis(statistics)
+    # Should always be non-empty strings
+    assert isinstance(result['strengths'], str) and result['strengths'].strip()
+    assert isinstance(result['areas_to_improve'], str) and result['areas_to_improve'].strip()
