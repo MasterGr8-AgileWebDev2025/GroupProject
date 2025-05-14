@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 document.addEventListener('DOMContentLoaded', function() {
     // Get all elements with fade-in animations
-    const fadeElements = document.querySelectorAll('.fade-in, .fade-in-card');
+    const fadeElements = document.querySelectorAll('.fade-in, .fade-in-card, .fade-in-top, .fade-in-bottom');
 
     // If no elements found, exit
     if (fadeElements.length === 0) return;
