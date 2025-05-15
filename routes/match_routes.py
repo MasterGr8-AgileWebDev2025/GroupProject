@@ -21,6 +21,7 @@ from datetime import datetime
 
 # set Gemini API
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+
 genai.configure(api_key=GEMINI_API_KEY)
 
 
@@ -216,11 +217,13 @@ def download_report(match_id):
 
 
 
+
 # Add new route in match_bp
 @match_bp.route('/match/<int:match_id>/analyze', methods=['POST'])
 @login_required
 def analyze_match(match_id):
     """AI analysis route for match"""
+
     # Check access permission
     match = check_match_access(match_id)
 
@@ -234,6 +237,7 @@ def analyze_match(match_id):
         model = genai.GenerativeModel('gemini-2.0-flash')
 
         # Construct prompt
+
         prompt = f"""
         As a professional tennis coach, analyze these match statistics and provide specific improvement recommendations.
         Your response should be strictly formatted in the following structure:
@@ -320,6 +324,7 @@ def analyze_match(match_id):
         response = model.generate_content(prompt)
 
         # Return analysis result
+
         return jsonify({
             "success": True,
             "analysis": response.text,
@@ -328,6 +333,7 @@ def analyze_match(match_id):
 
     except Exception as e:
         # Log error
+
         print(f"AI Analysis Error: {str(e)}")
         return jsonify({
             "success": False,
