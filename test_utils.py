@@ -54,7 +54,9 @@ def test_calculate_overall_score_full_data():
 
 
 def test_calculate_overall_score_no_basic_stats():
-    # Test with no basic stats
+    """
+    Test without basic stats
+    """
     statistics = {
         'game_phases': {
             'preparation': {'score': 7},
@@ -68,29 +70,6 @@ def test_calculate_overall_score_no_basic_stats():
     result = calculate_overall_score(statistics)
     assert result == 5.2, "The result without basic stats should be 5.2"
 
-
-class MockAnalysis:
-    """
-    A mock class to simulate the analysis object.
-    """
-    def __init__(self):
-        self.aces = 0
-        self.double_faults = 0
-        self.first_serve_percentage = 0.0
-        self.first_serve_points_won = 0
-        self.second_serve_points_won = 0
-        self.break_points_saved = 0
-        self.break_points_faced = 0
-        self.forehand_winners = 0
-        self.backhand_winners = 0
-        self.forehand_errors = 0
-        self.backhand_errors = 0
-        self.distance_covered = 0.0
-        self.preparation_score = 0.0
-        self.contact_score = 0.0
-        self.follow_through_score = 0.0
-        self.strengths = ""
-        self.areas_to_improve = ""
 
 def test_generate_match_analysis_populates_keys():
     """
