@@ -621,7 +621,7 @@ h2 {
     color: var(--text);
   }
 
-/* 滚动容器样式 */
+
 .testimonial-carousel-container {
   width: 100%;
   overflow: hidden;
@@ -629,42 +629,41 @@ h2 {
   padding: 20px 0;
 }
 
-/* 滚动内容区域 */
+
 .testimonial-carousel {
   display: flex;
-  animation: scroll 60s linear infinite; /* 控制滚动速度 */
-  width: fit-content; /* 确保容纳所有卡片 */
+  animation: scroll 60s linear infinite;
+  width: fit-content;
 }
 
-/* 暂停滚动，当用户悬停时 */
+
 .testimonial-carousel:hover {
   animation-play-state: paused;
 }
 
-/* 单个评论卡片样式 */
+
 .testimonial-card {
   flex: 0 0 auto;
-  width: 350px; /* 固定宽度 */
+  width: 350px;
   padding: 0 15px;
   transition: transform 0.3s;
 }
 
-/* 卡片悬停效果 */
+
 .testimonial-card:hover {
   transform: translateY(-5px);
 }
 
-/* 滚动动画 */
+
 @keyframes scroll {
   0% {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-350px * 4)); /* 滚动到第4张卡片的位置，实现循环 */
-  }
+    transform: translateX(calc(-350px * 4));
 }
 
-/* 根据屏幕尺寸调整卡片大小 */
+/* adjust size based on scren size */
 @media (max-width: 992px) {
   .testimonial-card {
     width: 300px;
@@ -695,7 +694,7 @@ h2 {
   }
 }
 
-/* 添加渐变遮罩，使滚动效果更平滑 */
+
 .testimonial-carousel-container::before,
 .testimonial-carousel-container::after {
   content: "";

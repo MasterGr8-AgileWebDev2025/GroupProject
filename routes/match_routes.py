@@ -19,8 +19,8 @@ from flask import jsonify
 import os
 from datetime import datetime
 
-# 配置 Gemini API
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')  # 从环境变量获取 API 密钥
+# set Gemini API
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 genai.configure(api_key=GEMINI_API_KEY)
 
 
