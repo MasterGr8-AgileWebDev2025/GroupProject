@@ -14,17 +14,29 @@ logging.basicConfig(level=logging.DEBUG)
 class Base(DeclarativeBase):
     pass
 
+class Config:
+    SECRET_KEY = os.environ.get("SESSION_SECRET", "tennis-analytics-secret-key")
+
+class DeploymentConfig(Config):
+    db_uri = "sqlite:///tennis_analytics.db"
+
+class TestingConfig(Config):
+    db_uri = 'sqlite:///:memory'
+
+
+
 db = SQLAlchemy(model_class=Base)
 login_manager = LoginManager()
 
+
 # Create the app
-def create_application():
+def create_application(Config):
     app = Flask(__name__)
-    app.secret_key = os.environ.get("SESSION_SECRET", "tennis-analytics-secret-key")
+    app.secret_key = Config.SECRET_KEY
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
     # Configure the database with SQLite
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tennis_analytics.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = Config.db_uri
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # from routes.main_routes import main_bp
@@ -55,3 +67,6 @@ def create_application():
         register_blueprints(app)
 
     return app
+
+
+app = create_application(DeploymentConfig)
