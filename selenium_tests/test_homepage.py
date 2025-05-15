@@ -8,7 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 
 # waiting time for elements to load
-waitingTime = 1.5
+waitingTime = 1
 
 options = webdriver.ChromeOptions()
 options.add_argument('--headless=new') # For Chrome 109+

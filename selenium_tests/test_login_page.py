@@ -10,10 +10,11 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 
 # waiting time for elements to load
-waitingTime = 2
+waitingTime = 1
 
 options = webdriver.ChromeOptions()
-# options.add_argument('--headless=new') # For Chrome 109+
+options.add_argument('--headless=new') # For Chrome 109+
+options.add_argument('--start-maximized') # without maximising the window error message appears
 
 service = Service(executable_path="chromedriver.exe")
 
@@ -32,7 +33,6 @@ def setup():
         return driver
 
 def teardown(driver):
-    time.sleep(waitingTime)
     driver.quit()
     print("Browser closed.")
 
@@ -103,7 +103,7 @@ def test_empty_password(driver):
 
         # Assert that the buttons exist and contain the desired text
         assert "Please fill out this field" in validation_msg, "Empty password is not triggering validation message"
-        print("Vlidation message over empty password is activated.")
+        print("Validation message over empty password is rendered.")
 
     except Exception as e:
         print(f"Test fails because: {str(e)}")
