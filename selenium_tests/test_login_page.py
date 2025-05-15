@@ -25,6 +25,7 @@ def setup():
         print("Driver title: " + driver.title)
         initial_url = driver.current_url
         print("Current url: " + initial_url)
+        driver.implicitly_wait(waitingTime)
 
     except Exception as e: # perhaps the application is not running well on localhost
         print(f"Localhost cannot be loaded: {str(e)}")
@@ -55,11 +56,13 @@ def test_login_form_exists():
         print(f"TEST FAILED: {str(e)}")
     
     finally:
-        return driver
+        teardown(driver)
         
 
-def test_invalid_email(driver):
+def test_invalid_email():
     try:
+        driver = setup()
+
         # Find the email input box
         # By this time email input field should have been present for a few seconds, no need to wait for it to show up 
         email_field = driver.find_element(By.ID, 'email')
@@ -86,9 +89,14 @@ def test_invalid_email(driver):
     except Exception as e:
         print(f"TEST FAILED: {str(e)}")
 
+    finally:
+        teardown(driver)
 
-def test_empty_password(driver):
+
+def test_empty_password():
     try:
+        driver = setup()
+
         email_field = driver.find_element(By.ID, 'email')
         email_field.send_keys("John Doe")
         
@@ -113,6 +121,6 @@ def test_empty_password(driver):
 
 
 if __name__ == "__main__":
-    drv = test_login_form_exists()
-    test_invalid_email(drv)
-    test_empty_password(drv)
+    test_login_form_exists()
+    test_invalid_email()
+    test_empty_password()
