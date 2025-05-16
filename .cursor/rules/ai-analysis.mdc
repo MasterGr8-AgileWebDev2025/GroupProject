@@ -1,0 +1,74 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# AI Analysis Component Guide
+
+## Overview
+The AI analysis component uses Gemini API to provide personalized tennis improvement recommendations based on match statistics.
+
+## Key Files
+- [match_routes.py](mdc:routes/match_routes.py) - Contains the AI analysis endpoint and prompt engineering
+- [analysis.html](mdc:templates/analysis.html) - Handles the display of AI recommendations
+
+## Prompt Structure
+The AI analysis prompt follows this structure:
+
+```
+[MATCH_SUMMARY]
+Brief analysis of the match performance
+
+[KEY_AREAS]
+1. Area Name
+   - Current Performance
+   - Impact
+   - Priority
+
+[PRACTICE_DRILLS]
+1. Drill Name
+   - Purpose
+   - Steps
+   - Duration
+
+[TECHNICAL_TIPS]
+1. Tip Category
+   - Specific Tip
+   - Implementation
+   - Expected Outcome
+
+[WEEKLY_PLAN]
+Structured 7-day practice plan
+```
+
+## Frontend Display
+The analysis results are displayed using:
+- Bootstrap cards for each section
+- Color-coded priority indicators
+- Responsive grid layout
+- Interactive elements
+
+## Error Handling
+- Loading states with spinner
+- Error messages with dismissible alerts
+- Fallback content when analysis fails
+
+## Best Practices
+
+### Prompt Engineering
+1. Keep sections clearly marked with brackets
+2. Maintain consistent formatting
+3. Include all relevant statistics
+4. Request specific, actionable recommendations
+
+### Frontend Implementation
+1. Use consistent card styling
+2. Implement proper loading states
+3. Handle all error cases
+4. Maintain responsive design
+
+### Data Processing
+1. Validate input data
+2. Handle missing statistics gracefully
+3. Format numbers appropriately
+4. Structure response consistently
