@@ -41,8 +41,8 @@ This platform combines modern web technologies, intelligent analysis, and sleek 
 
 ## Testing
 
-Run `pytest` and it will collect and run all test files for you.
-Use `pytest test_utils.py` will run only the test file `test_utils.py`.
+Run `pytest` to collect and run all test files.
+Use `pytest test_utils.py` to run only the test file `test_utils.py`.
 
 Currently there are 3 test files:
 1. test_utils.py checks maths calculated by utils.py
@@ -52,8 +52,8 @@ Currently there are 3 test files:
 # Project Structure
 
 /tennis-analytics-platform  
-|-- app.py                  # Application initialization and configuration  
-|-- main.py                 # Application entry point  
+|-- app.py					# Application initialization and configuration  
+|-- main.py					# Application entry point  
 |-- models.py               # Database model definitions  
 |-- forms.py                # Form definitions  
 |-- routes.py               # Routes and controllers  
@@ -62,7 +62,7 @@ Currently there are 3 test files:
 |   |-- test_login_page.py  # Test over login page  
 |-- helpers.py              # Helper functions  
 |-- utils.py                # Utility functions  
-|-- test_utils.py           # Unittest checking utils.py  
+|-- test_utils.py           # Unit test for utils.py  
 |-- .gitignore              # Git ignore file  
 |-- .DS_Store               # Mac OS directory attributes file  
 |-- chromedriver.exe        # Chrome WebDriver for Selenium tests  
