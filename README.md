@@ -264,6 +264,11 @@ flask db upgrade
 flask run
 ```
 
+## Testing
+
+Run `pytest` to collect and run all test files.
+Use `pytest test_utils.py` to run only the test file `test_utils.py`.
+
 ## Purpose & Design
 
 ### Purpose
@@ -279,25 +284,3 @@ flask run
 - 🔒 **Privacy & Permission Control**: Fine-grained sharing and access to ensure users retain control over their data.
 
 This platform combines modern web technologies, intelligent analysis, and sleek design to create a smart, collaborative tool for the tennis community.
-
-
-## Getting Started
-
-1. Clone the repository (or download the zip file and unzip it to your chosen directory)
-2. Install dependencies within the directory: `pip install -r requirements.txt`
-3. Configure environment variables
-4. Run the application: `python main.py`
-
-## Testing
-
-Run `pytest` to collect and run all test files.
-Use `pytest test_utils.py` to run only the test file `test_utils.py`.
-
-Currently there are 3 test files:
-1. test_utils.py checks maths calculated by utils.py
-2. selenium_tests/test_homepage.py runs selenium test on the homepage
-3. selenium_tests/test_login_page runs selenium test on the login page
-
-
-
-
