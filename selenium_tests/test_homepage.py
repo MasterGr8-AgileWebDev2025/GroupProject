@@ -14,7 +14,8 @@ options = webdriver.ChromeOptions()
 options.add_argument('--headless=new') # For Chrome 109+
 options.add_argument('--start-maximized') # without maximising the window error message appears
 
-service = Service(executable_path="chromedriver.exe")
+# 使用 macOS 的 ChromeDriver 路径
+service = Service()  # 让 Selenium 自动查找 ChromeDriver
 
 def setup():
     driver = webdriver.Chrome(options=options, service=service)
@@ -32,7 +33,11 @@ def setup():
         return driver
 
 def teardown(driver):
-    driver.quit()
+    if driver:
+        try:
+            driver.quit()
+        except Exception as e:
+            print(f"Error closing browser: {str(e)}")
     print("Browser closed.")
 
 
@@ -93,6 +98,7 @@ def test_login_button():
         teardown(driver)
 
 def test_explanation_display():
+    driver = None
     try:
         driver = setup()
         
@@ -112,9 +118,11 @@ def test_explanation_display():
 
     except Exception as e:
         print(f"Test fails because: {str(e)}")
+        raise e
     
     finally:
-        teardown(driver)
+        if driver:
+            teardown(driver)
 
 
 if __name__ == "__main__":

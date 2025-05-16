@@ -53,17 +53,74 @@ The git repo for group 8 in Agile Web Dev of semester 1 2025.
 ## Project Structure
 ```
 tennis-analytics/
-├── app/
-│   ├── models/         # Database models
-│   ├── routes/         # Route handlers
-│   ├── static/         # Static files (CSS, JS)
-│   └── templates/      # HTML templates
-├── migrations/         # Database migrations
-├── tests/             # Test files
-├── .env               # Environment variables
-├── config.py          # Configuration
-└── requirements.txt   # Dependencies
+├── .cursor/          # Cursor IDE configuration
+├── .github/          # GitHub configuration files
+├── .idea/            # IntelliJ IDEA configuration
+├── docs/             # Project documentation
+├── instance/         # Instance-specific files
+├── migrations/       # Database migrations
+├── routes/           # Route definitions
+├── selenium_tests/   # Selenium test files
+│   ├── test_homepage.py    # Homepage UI tests
+│   └── test_login_page.py  # Login page UI tests
+├── static/          # Static files (CSS, JS, images)
+├── templates/       # HTML templates
+├── .DS_Store        # macOS system file
+├── .env             # Environment variables
+├── .gitignore       # Git ignore rules
+├── app.py           # Main application file
+├── chromedriver.exe # Chrome WebDriver for Selenium
+├── config.py        # Application configuration
+├── conftest.py      # Pytest configuration
+├── forms.py         # Form definitions
+├── helpers.py       # Helper functions
+├── main.py          # Application entry point
+├── match_analysis.html      # Match analysis template
+├── match_details.html       # Match details template
+├── match_report_orginal.html # Original match report template
+├── models.py        # Database models
+├── requirements.txt # Project dependencies
+├── routes.py        # Route definitions
+├── test_utils.py    # Utility function tests
+└── utils.py         # Utility functions
 ```
+
+### Key Components
+
+#### Application Files
+- `app.py`: Main Flask application file
+- `main.py`: Application entry point
+- `routes.py`: Route handlers and endpoints
+- `models.py`: Database models and schemas
+- `forms.py`: Form definitions for user input
+- `config.py`: Application configuration settings
+
+#### Testing
+- `selenium_tests/`: UI testing with Selenium
+  - `test_homepage.py`: Tests for homepage functionality
+  - `test_login_page.py`: Tests for login page functionality
+- `test_utils.py`: Unit tests for utility functions
+- `conftest.py`: Pytest configuration and fixtures
+
+#### Templates
+- `templates/`: HTML templates directory
+- `match_analysis.html`: AI-powered match analysis view
+- `match_details.html`: Detailed match statistics view
+- `match_report_orginal.html`: Original match report template
+
+#### Utilities
+- `utils.py`: Core utility functions
+- `helpers.py`: Helper functions for data processing
+- `chromedriver.exe`: Chrome WebDriver for Selenium tests
+
+#### Configuration
+- `.env`: Environment variables
+- `requirements.txt`: Project dependencies
+- `.gitignore`: Git ignore rules
+
+#### Documentation
+- `docs/`: Project documentation
+- `README.md`: Project overview and setup instructions
 
 ## Contributing
 1. Fork the repository
@@ -172,7 +229,7 @@ To better assist you, could you please provide:
 - Share common issues with development team
 - Regular training on new features
 - Monitor support metrics
-=======
+
 The Tennis Analytics Platform is a web-based application designed to help tennis players 
 track, analyze, and share their match performance data. The system enables users to upload 
 match details, visualize performance metrics through interactive charts, and selectively 
@@ -197,18 +254,12 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-4. Set up environment variables:
-```bash
-cp .env.example .env
-# Edit .env with your configuration
-```
-
-5. Initialize the database:
+4. Initialize the database:
 ```bash
 flask db upgrade
 ```
 
-6. Run the application:
+5. Run the application:
 ```bash
 flask run
 ```
