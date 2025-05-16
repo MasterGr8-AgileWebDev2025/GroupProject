@@ -1,12 +1,16 @@
 # Tennis Analytics Platform
 
-A comprehensive tennis match analysis platform that helps players track, analyze, and improve their game through detailed statistics and AI-powered insights.
+## GroupProject
+The git repo for group 8 in Agile Web Dev of semester 1 2025.
+### 👥 Project Members
 
-## Team Members
-- 24525844 Daniel Xu
-- 24386828 Brielle Wang
-- 24647365 Md Jubel Ahmed
-- 24404533 Jimmy Li
+| Student ID | Name           | GitHub Username |
+|------------|----------------|-----------------|
+| 24525844   | Daniel Xu      | danielxu1987    |
+| 24386828   | Brielle Wang   | briellewang     |
+| 24647365   | Md Jubel Ahmed | Jubel-Ahmed     |
+| 24404533   | Jimmy Li       | oxff-96         |
+
 
 ## Features
 
@@ -45,41 +49,6 @@ A comprehensive tennis match analysis platform that helps players track, analyze
 - CSS3
 - JavaScript
 - Chart.js for data visualization
-
-## Setup Instructions
-
-1. Clone the repository:
-```bash
-git clone https://github.com/GroupProject/tennis-analytics.git
-cd tennis-analytics
-```
-
-2. Create and activate a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-4. Set up environment variables:
-```bash
-cp .env.example .env
-# Edit .env with your configuration
-```
-
-5. Initialize the database:
-```bash
-flask db upgrade
-```
-
-6. Run the application:
-```bash
-flask run
-```
 
 ## Project Structure
 ```
@@ -203,3 +172,81 @@ To better assist you, could you please provide:
 - Share common issues with development team
 - Regular training on new features
 - Monitor support metrics
+=======
+The Tennis Analytics Platform is a web-based application designed to help tennis players 
+track, analyze, and share their match performance data. The system enables users to upload 
+match details, visualize performance metrics through interactive charts, and selectively 
+share insights with other users.
+
+## Setup Instructions
+
+1. Clone the repository:
+```bash
+git clone https://github.com/GroupProject/tennis-analytics.git
+cd tennis-analytics
+```
+
+2. Create and activate a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+4. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+5. Initialize the database:
+```bash
+flask db upgrade
+```
+
+6. Run the application:
+```bash
+flask run
+```
+
+## Purpose & Design
+
+### Purpose
+- 🎾 Empower **recreational and competitive players** to track progress and make data-informed improvements.
+- 🧠 Enable **coaches** to monitor player development and provide targeted feedback.
+- 🏆 Support **teams and clubs** in comparing performance across members.
+- 📊 Promote **data literacy in sports** through intuitive dashboards and analytics.
+
+### Design Philosophy
+- 🖥️ **User-Centered Interface**: Clean navigation, responsive layout, and seamless user experience across devices.
+- 📈 **Visualization-First**: Interactive charts, heatmaps, and dashboards for clear performance feedback.
+- 🧩 **Modular Architecture**: Built with scalability in mind—ready for future integrations like ML, video analysis, and mobile support.
+- 🔒 **Privacy & Permission Control**: Fine-grained sharing and access to ensure users retain control over their data.
+
+This platform combines modern web technologies, intelligent analysis, and sleek design to create a smart, collaborative tool for the tennis community.
+
+
+## Getting Started
+
+1. Clone the repository (or download the zip file and unzip it to your chosen directory)
+2. Install dependencies within the directory: `pip install -r requirements.txt`
+3. Configure environment variables
+4. Run the application: `python main.py`
+
+## Testing
+
+Run `pytest` to collect and run all test files.
+Use `pytest test_utils.py` to run only the test file `test_utils.py`.
+
+Currently there are 3 test files:
+1. test_utils.py checks maths calculated by utils.py
+2. selenium_tests/test_homepage.py runs selenium test on the homepage
+3. selenium_tests/test_login_page runs selenium test on the login page
+
+
+
+
